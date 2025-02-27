@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Http;  // Import the Http facade
 use Illuminate\Support\Str;
@@ -13,7 +14,7 @@ class DataScrapingController extends Controller
 {
     public function data_scraping()
     {
-        for ($i = 401000062; $i < 401000200; $i++) { 
+        for ($i = 401000001; $i < 401000100; $i++) { 
             $roll = $i;
 
             // Send POST request
@@ -38,4 +39,15 @@ class DataScrapingController extends Controller
 
         return 'Data scraping completed!';
     }
+
+    public function showScrapedData()
+    {
+        // Paginate the data instead of getting all at once
+        $scrapedData = DB::table('scraped_data')
+            ->selectRaw("id, roll_no, TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(core_data, 'Name: ', -1), '<br />', 1)) as name")
+            ->paginate(15); // 10 items per page, adjust as needed
+    
+        return view('scraped_data', compact('scrapedData'));
+    }
+    
 }

@@ -8,6 +8,11 @@ use App\Http\Controllers\DataScrapingController;
 
 
 
-Route::get('/', [HomeController::class, 'index']);
+// Home route with name 'home'
+Route::get('/', function () {
+    return view('home');
+})->name('home');
 
-Route::get('/scrape-data', [DataScrapingController::class, 'data_scraping']);
+
+Route::get('/scrape-data', [DataScrapingController::class, 'data_scraping'])->name('scrape.data');
+Route::get('/view-data', [DataScrapingController::class, 'showScrapedData'])->name('view.data');
