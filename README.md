@@ -16,7 +16,7 @@ This is a simple **Laravel-based web scraping project** that collects data from 
 ### Key Features:
 
 - Scrapes data for a range of roll numbers.
-- Posts requests to **[NTRCA Teletalk Results](http://ntrca.teletalk.com.bd/result/index.php)** using the roll number and exam parameters.
+- Posts requests to **[Teletalk Results](http://ntrca.teletalk.com.bd/result/index.php)** using the roll number and exam parameters.
 - Saves successfully scraped data (containing "CONGRATULATIONS") in a database table called scraped_data.
 - Designed for easy execution through a controller function.
 
