@@ -71,4 +71,4 @@ Finally, serve the application:
 Visit http://127.0.0.1:8000/scrape-data in your browser to see the application running.
 
 ### Conclusion
-This project efficiently scrapes data from an external website, extracting roll numbers and their corresponding results. The scraped data is then stored in a MySQL database for easy access and management. The system automates the process, ensuring smooth and reliable data collection.
+This project efficiently scrapes data from an external website. The scraped data is then stored in a MySQL database for easy access and management. The system automates the process, ensuring smooth and reliable data collection.
