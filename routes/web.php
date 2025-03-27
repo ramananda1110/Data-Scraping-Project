@@ -19,3 +19,5 @@ Route::get('/scrape-data', [DataScrapingController::class, 'data_scraping'])->na
 Route::get('/view-data', [DataScrapingController::class, 'showScrapedData'])->name('view.data');
 
 Route::get('/fetch-requisitions', [RequisitionController::class, 'fetchAndStoreData']);
+
+Route::get('/all-info', [RequisitionController::class, 'getAllInfo']);
