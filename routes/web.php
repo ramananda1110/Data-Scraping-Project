@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DataScrapingController;
 use App\Http\Controllers\RequisitionController;
 
+use App\Http\Controllers\AllRequisitionController;
 
 
 
@@ -21,3 +22,11 @@ Route::get('/view-data', [DataScrapingController::class, 'showScrapedData'])->na
 Route::get('/fetch-requisitions', [RequisitionController::class, 'fetchAndStoreData']);
 
 Route::get('/all-info', [RequisitionController::class, 'getAllInfo']);
+
+
+Route::get('/fetch-all-requisitions', [AllRequisitionController::class, 'fetchAndStoreData']);
+Route::get('/all-requisitions', [AllRequisitionController::class, 'getAllRecords']);
+
+Route::get('/all-requisitions-info', [AllRequisitionController::class, 'getAllInfo']);
+
+Route::get('/requisitions', [AllRequisitionController::class, 'index'])->name('requisitions.index');
