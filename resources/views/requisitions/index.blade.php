@@ -118,6 +118,7 @@
                 <th>Serial</th>
                 <th>Etin ID</th>
                 <th>Institute Name</th>
+                <th>Subject</th>
                 <th>District</th>
                 <th>Thana</th>
                 <th>Apply For</th>
@@ -129,6 +130,8 @@
                 <td>{{ ($requisitions->currentPage()-1) * $requisitions->perPage() + $loop->iteration }}</td>
                 <td>{{ $req->etin_id }}</td>
                 <td>{{ $req->name_of_institute }}</td>
+                <td>{{ $req->subject }}</td>
+
                 <td>{{ $req->district }}</td>
                 <td>{{ $req->thana }}</td>
                 <td>{{ $req->apply_for }}</td>

@@ -45,6 +45,9 @@
         <div class="mt-4">
             <a href="{{ route('scrape.data') }}" class="btn btn-success btn-custom">Scrape Data</a>
             <a href="{{ route('view.data') }}" class="btn btn-primary btn-custom">View Data</a>
+            <a href="{{ route('requisitions.index') }}" class="btn btn-success btn-custom">View Vacancy</a>
+            <a href="{{ route('requisitions.district') }}" class="btn btn-primary btn-custom">Disctict wise Vacant</a>
+
         </div>
     </div>
 

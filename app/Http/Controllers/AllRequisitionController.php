@@ -94,20 +94,20 @@ class AllRequisitionController extends Controller
     {
         // Total count of all records
         $total = AllRequisition::count();
-
-        // Total MADRASHA count (MADRASHA, MADRASA, and MADRASAH)
+    
+        // Total MADRASAH count (MADRASHA, MADRASA, and MADRASAH)
         $madrasahTotal = AllRequisition::where('name_of_institute', 'LIKE', '%MADRASHA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%')
             ->count();
-
+    
         // Total general count (all - MADRASHA count)
         $generalTotal = $total - $madrasahTotal;
-
+    
         // Total Female only count
         $femaleOnlyTotal = AllRequisition::where('apply_for', 'LIKE', '%Female only%')->count();
-
-        // District-wise count for both MADRASHA and General
+    
+        // District-wise count for both MADRASAH and General
         $districtCounts = AllRequisition::groupBy('district')
             ->selectRaw('district, count(*) as total_count, 
                         sum(case when name_of_institute LIKE "%MADRASHA%" or 
@@ -115,22 +115,22 @@ class AllRequisitionController extends Controller
                                   name_of_institute LIKE "%MADRASAH%" then 1 else 0 end) as madrasa_count,
                         sum(case when apply_for LIKE "%Female only%" then 1 else 0 end) as female_seat')
             ->get();
-
+    
         // Calculate General count for each district (total - madrasa_count)
         foreach ($districtCounts as $districtCount) {
             $districtCount->general_count = $districtCount->total_count - $districtCount->madrasa_count;
         }
-
-        // Return the counts in the response
-        return response()->json([
+    
+        // Return the data to the Blade view
+        return view('requisitions.all_info', [
             'total' => $total,
-            'madrasah_total' => $madrasahTotal,
-            'general_total' => $generalTotal,
-            'female_only_total' => $femaleOnlyTotal,
-            'district_counts' => $districtCounts,
+            'madrasahTotal' => $madrasahTotal,
+            'generalTotal' => $generalTotal,
+            'femaleOnlyTotal' => $femaleOnlyTotal,
+            'districtCounts' => $districtCounts,
         ]);
     }
-
+    
 
 
 
