@@ -7,6 +7,7 @@ use App\Http\Controllers\DataScrapingController;
 use App\Http\Controllers\RequisitionController;
 
 use App\Http\Controllers\AllRequisitionController;
+use App\Http\Controllers\SubjectController;
 
 
 
@@ -30,3 +31,5 @@ Route::get('/all-info', [RequisitionController::class, 'getAllInfo']);
 Route::get('/all-requisitions-info', [AllRequisitionController::class, 'getAllInfo'])->name('requisitions.district');
 
 Route::get('/requisitions', [AllRequisitionController::class, 'index'])->name('requisitions.index');
+
+Route::get('/bangla-info', [SubjectController::class, 'getBanglaInfo'])->name('subjects.bangla');

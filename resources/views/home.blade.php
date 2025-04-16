@@ -10,7 +10,7 @@
     
     <style>
         body {
-            background-color: #f8f9fa;
+            background-color: #f4f7fc;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,34 +20,50 @@
         .container {
             background: white;
             padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            max-width: 550px;
         }
         .btn-custom {
-            width: 200px;
+            width: 100%;
             padding: 12px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
             border-radius: 8px;
             transition: 0.3s;
+            display: block;
+            margin-bottom: 10px;
         }
         .btn-custom:hover {
-            transform: scale(1.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #218838);
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            border: none;
+        }
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #b52b38);
+            border: none;
         }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1 class="mb-4">Welcome to the Data Scraping Project</h1>
+        <h1 class="mb-3">📊 Data Scraping Project</h1>
         <p class="text-muted">Efficiently scrape and manage data with ease.</p>
 
         <div class="mt-4">
-            <a href="{{ route('scrape.data') }}" class="btn btn-success btn-custom">Scrape Data</a>
-            <a href="{{ route('view.data') }}" class="btn btn-primary btn-custom">View Data</a>
-            <a href="{{ route('requisitions.index') }}" class="btn btn-success btn-custom">View Vacancy</a>
-            <a href="{{ route('requisitions.district') }}" class="btn btn-primary btn-custom">Disctict wise Vacant</a>
-
+            <a href="{{ route('scrape.data') }}" class="btn btn-success btn-custom">🔍 Scrape Data</a>
+            <a href="{{ route('view.data') }}" class="btn btn-primary btn-custom">📄 View Data</a>
+            <a href="{{ route('requisitions.index') }}" class="btn btn-success btn-custom">📌 View Vacancy</a>
+            <a href="{{ route('requisitions.district') }}" class="btn btn-primary btn-custom">📍 District Wise Vacancy</a>
+            <a href="{{ route('subjects.bangla') }}" class="btn btn-danger btn-custom">📘 Bangla Candidates</a>
         </div>
     </div>
 
