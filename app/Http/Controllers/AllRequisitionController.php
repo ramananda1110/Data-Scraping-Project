@@ -95,7 +95,6 @@ class AllRequisitionController extends Controller
         // Total count of all records
         $total = AllRequisition::count();
     
-        dd('hello');
         // Total MADRASAH count (MADRASHA, MADRASA, and MADRASAH)
         $madrasahTotal = AllRequisition::where('name_of_institute', 'LIKE', '%MADRASHA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
