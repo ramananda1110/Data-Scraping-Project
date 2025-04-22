@@ -95,10 +95,12 @@ class AllRequisitionController extends Controller
         // Total count of all records
         $total = AllRequisition::count();
     
+        dd('hello');
         // Total MADRASAH count (MADRASHA, MADRASA, and MADRASAH)
         $madrasahTotal = AllRequisition::where('name_of_institute', 'LIKE', '%MADRASHA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%')
+            ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
             ->count();
     
         // Total general count (all - MADRASHA count)
@@ -162,6 +164,7 @@ class AllRequisitionController extends Controller
         $filtered_madrasah = (clone $query)->where(function($q) {
             $q->where('name_of_institute', 'LIKE', '%MADRASHA%')
               ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
+              ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
               ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%');
         })->count();
         $filtered_female  = (clone $query)->where('apply_for', 'Female only')->count();

@@ -128,6 +128,7 @@ class RequisitionController extends Controller
         $madrasahTotal = Requisition::where('name_of_institute', 'LIKE', '%MADRASHA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%')
+            ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
             ->count();
 
         // Total general count (all - MADRASHA count)
@@ -140,7 +141,7 @@ class RequisitionController extends Controller
         $districtCounts = Requisition::groupBy('district')
             ->selectRaw('district, count(*) as total_count, 
                         sum(case when name_of_institute LIKE "%MADRASHA%" or 
-                                  name_of_institute LIKE "%MADRASA%" or 
+                                  name_of_institute LIKE "%MADRASA%" or  name_of_institute LIKE "%MADRASH%" or 
                                   name_of_institute LIKE "%MADRASAH%" then 1 else 0 end) as madrasa_count,
                         sum(case when apply_for LIKE "%Female only%" then 1 else 0 end) as female_seat')
             ->get();
