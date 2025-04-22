@@ -111,7 +111,7 @@ class AllRequisitionController extends Controller
         $districtCounts = AllRequisition::groupBy('district')
             ->selectRaw('district, count(*) as total_count, 
                         sum(case when name_of_institute LIKE "%MADRASHA%" or 
-                                  name_of_institute LIKE "%MADRASA%" or 
+                                  name_of_institute LIKE "%MADRASA%" or name_of_institute LIKE "%MADRASH%" or 
                                   name_of_institute LIKE "%MADRASAH%" then 1 else 0 end) as madrasa_count,
                         sum(case when apply_for LIKE "%Female only%" then 1 else 0 end) as female_seat')
             ->get();
