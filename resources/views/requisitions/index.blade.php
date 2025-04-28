@@ -119,6 +119,7 @@
                 <th>Etin ID</th>
                 <th>Institute Name</th>
                 <th>Subject</th>
+                <th>Post For</th>
                 <th>District</th>
                 <th>Thana</th>
                 <th>Apply For</th>
@@ -131,6 +132,7 @@
                 <td>{{ $req->etin_id }}</td>
                 <td>{{ $req->name_of_institute }}</td>
                 <td>{{ $req->subject }}</td>
+                <td>{{ $req->post_name }}</td>
 
                 <td>{{ $req->district }}</td>
                 <td>{{ $req->thana }}</td>
