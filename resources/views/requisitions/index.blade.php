@@ -18,7 +18,7 @@
                     <label for="post_name" class="form-label">Post Name</label>
                     <input type="text" name="post_name" id="post_name" class="form-control" placeholder="Post Name" value="{{ request('post_name') }}">
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="district" class="form-label">District</label>
                     <select name="district" class="form-control">
                     <option value="">Select District</option>
@@ -87,12 +87,22 @@
                     <option value="LAKSHMIPUR" {{ request('district') == 'LAKSHMIPUR' ? 'selected' : '' }}>LAKSHMIPUR</option>
                     <option value="NOAKHALI" {{ request('district') == 'NOAKHALI' ? 'selected' : '' }}>NOAKHALI</option>
                 </select>                </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <label for="apply_for" class="form-label">Apply For</label>
                     <select name="apply_for" id="apply_for" class="form-select">
                         <option value="">All</option>
                         <option value="Female only" {{ request('apply_for')=='Female only' ? 'selected' : '' }}>Female only</option>
                         
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="institute_type" class="form-label">Institute Type</label>
+                    <select name="institute_type" id="institute_type" class="form-select">
+                        <option value="">All</option>
+                        <option value="general" {{ request('institute_type')=='general' ? 'selected' : '' }}>General</option>
+                        <option value="madrasha" {{ request('institute_type')=='madrasha' ? 'selected' : '' }}>Madrasha</option>
+
                     </select>
                 </div>
                 <div class="col-12 text-center mt-3">

@@ -158,6 +158,30 @@ class AllRequisitionController extends Controller
             $query->where('apply_for',  $request->apply_for);
         }
 
+        if ($request->filled('institute_type')) {
+
+            if ($request->institute_type === 'madrasha') {
+                $query->where(function ($q) {
+                    $q->where('name_of_institute', 'LIKE', '%MADRASHA%')
+                      ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
+                      ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
+                      ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%');
+                });
+            } else {
+                $query->where(function ($q) use ($request) {
+                    $q->where('name_of_institute', 'NOT LIKE', '%MADRASHA%')
+                      ->where('name_of_institute', 'NOT LIKE', '%MADRASA%')
+                      ->where('name_of_institute', 'NOT LIKE', '%MADRASH%')
+                      ->where('name_of_institute', 'NOT LIKE', '%MADRASAH%');
+                });
+            }
+            
+           
+        }
+
+        // dd($request->institute_type);
+
+
         // Clone the query for totals before pagination.
         $filtered_total   = (clone $query)->count();
         $filtered_madrasah = (clone $query)->where(function($q) {
