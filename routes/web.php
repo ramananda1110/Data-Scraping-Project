@@ -25,8 +25,8 @@ Route::get('/fetch-requisitions', [RequisitionController::class, 'fetchAndStoreD
 Route::get('/all-info', [RequisitionController::class, 'getAllInfo']);
 
 
-//Route::get('/fetch-all-requisitions', [AllRequisitionController::class, 'fetchAndStoreData']);
-//Route::get('/all-requisitions', [AllRequisitionController::class, 'getAllRecords']);
+Route::get('/fetch-all-requisitions', [AllRequisitionController::class, 'fetchAndStoreData']);
+Route::get('/all-requisitions', [AllRequisitionController::class, 'getAllRecords']);
 
 Route::get('/all-requisitions-info', [AllRequisitionController::class, 'getAllInfo'])->name('requisitions.district');
 

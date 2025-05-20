@@ -118,7 +118,10 @@
         <strong>Total:</strong> {{ $filtered_total }} |
         <strong>Madrasah:</strong> {{ $filtered_madrasah }} |
         <strong>General:</strong> {{ $filtered_general }} |
-        <strong>Female Only:</strong> {{ $filtered_female }}
+        <strong>Female Only:</strong> {{ $filtered_female }} | 
+        <strong>Lecturer:</strong> {{ $lecturer }} | 
+        <strong>Demonstrator:</strong> {{ $demonstrator }}
+
     </div>
 
     <!-- Data Table -->

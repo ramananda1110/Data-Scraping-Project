@@ -11,7 +11,17 @@ class AllRequisitionController extends Controller
 {
 
     private $codes = [
-        411, 412, 413, 414, 415
+        //701, 702, 703, 704, 705, 706, 707, 708,
+        // 109, 110, 111, 112, 113, 114, 115, 116,
+        // 305, 306, 307, 309, 308, 310,311, 312, 313, 314, 315, 316, 317
+        // 201, 202, 203, 204, 205, 206, 207, 208, 209, 210
+        //501, 502, 503, 504, 505, 506
+        
+        //601, 602,  603, 604
+          
+       
+         //801, 802, 803, 804
+         //405, 406, 407, 408, 409,  410, 411, 412, 413, 414, 415
      ];
 
     public function fetchAndStoreData()
@@ -95,11 +105,13 @@ class AllRequisitionController extends Controller
         // Total count of all records
         $total = AllRequisition::count();
     
-        // Total MADRASAH count (MADRASHA, MADRASA, and MADRASAH)
+        // Total MADRASAH count (MADRASHA, MADRASA, and MADRASAH, MADRSHA, MADRSASHA)
         $madrasahTotal = AllRequisition::where('name_of_institute', 'LIKE', '%MADRASHA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
+            ->orWhere('name_of_institute', 'LIKE', '%MADRSHA%')
+            ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%')
             ->count();
     
         // Total general count (all - MADRASHA count)
@@ -113,6 +125,7 @@ class AllRequisitionController extends Controller
             ->selectRaw('district, count(*) as total_count, 
                         sum(case when name_of_institute LIKE "%MADRASHA%" or 
                                   name_of_institute LIKE "%MADRASA%" or name_of_institute LIKE "%MADRASH%" or 
+                                  name_of_institute LIKE "%MADRSHA%" or name_of_institute LIKE "%MADRSASHA%" or
                                   name_of_institute LIKE "%MADRASAH%" then 1 else 0 end) as madrasa_count,
                         sum(case when apply_for LIKE "%Female only%" then 1 else 0 end) as female_seat')
             ->get();
@@ -165,6 +178,8 @@ class AllRequisitionController extends Controller
                     $q->where('name_of_institute', 'LIKE', '%MADRASHA%')
                       ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
                       ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
+                      ->orWhere('name_of_institute', 'LIKE', '%MADRSHA%')
+                      ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%')
                       ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%');
                 });
             } else {
@@ -172,6 +187,8 @@ class AllRequisitionController extends Controller
                     $q->where('name_of_institute', 'NOT LIKE', '%MADRASHA%')
                       ->where('name_of_institute', 'NOT LIKE', '%MADRASA%')
                       ->where('name_of_institute', 'NOT LIKE', '%MADRASH%')
+                      ->where('name_of_institute', 'NOT LIKE', '%MADRSASHA%')
+                      ->where('name_of_institute', 'NOT LIKE', '%MADRSHA%')
                       ->where('name_of_institute', 'NOT LIKE', '%MADRASAH%');
                 });
             }
@@ -188,17 +205,22 @@ class AllRequisitionController extends Controller
             $q->where('name_of_institute', 'LIKE', '%MADRASHA%')
               ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
               ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
+              ->orWhere('name_of_institute', 'LIKE', '%MADRSHA%')
+              ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%')
               ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%');
         })->count();
         $filtered_female  = (clone $query)->where('apply_for', 'Female only')->count();
         $filtered_general = $filtered_total - $filtered_madrasah;
+
+        $lecturer  = (clone $query)->where('post_name', 'Lecturer')->count();
+        $demonstrator  = (clone $query)->where('post_name', 'Demonstrator')->count();
 
         // Paginate the filtered results.
         $requisitions = $query->paginate(15)->appends($request->query());
 
         // Pass all filtered totals to the view.
         return view('requisitions.index', compact(
-            'requisitions', 'filtered_total', 'filtered_madrasah', 'filtered_general', 'filtered_female'
+            'requisitions', 'filtered_total', 'filtered_madrasah', 'filtered_general', 'filtered_female', 'lecturer', 'demonstrator',
         ));
     }
     
