@@ -18,14 +18,20 @@ class SubjectController extends Controller
                 ->orWhere('name', 'LIKE', "%{$search}%");
         }
 
-        $banglaData = $query->orderBy('roll_no')->paginate(15);
+        $banglaData = $query->orderBy('roll_no')->paginate(30);
 
         $femaleCount = DB::table('bangla')->where('gender', 'Female')->count();
         $maleCount = DB::table('bangla')->where('gender', 'Male')->count();
 
+        $passedCount = DB::table('bangla')->where('final_result', 'passed')->count();
+
+
+        $malePassed = DB::table('bangla')->where('gender', 'Male')->where('final_result', 'passed')->count();
+        $femalePassed = DB::table('bangla')->where('gender', 'Female')->where('final_result', 'passed')->count();
+
         $total = DB::table('bangla')->count();
 
-        return view('subjects.bangla_info', compact('banglaData', 'total', 'femaleCount', 'maleCount'));
+        return view('subjects.bangla_info', compact('banglaData', 'total', 'femaleCount', 'maleCount', 'passedCount', 'malePassed', 'femalePassed'));
     }
 
 

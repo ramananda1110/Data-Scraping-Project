@@ -53,7 +53,8 @@ class DataScrapingController extends Controller
     public function finalDataScraping()
     {
         // Fetch all roll_no values from the 'bangla' table
-        $students = Bangla::select('roll_no')->get();
+      
+        $students = DB::table('bangla')->select('roll_no')->get();
 
         foreach ($students as $student) {
             $roll = $student->roll_no;
@@ -68,14 +69,12 @@ class DataScrapingController extends Controller
 
             $data = $response->body();
 
-            // Determine result
             $finalResult = Str::contains($data, 'CONGRATULATIONS') ? 'passed' : 'failed';
 
-            // Update the final_result in the bangla table
-            Bangla::where('roll_no', $roll)->update([
-                'final_result' => $finalResult
-            ]);
-        }
+            DB::table('bangla')
+                ->where('roll_no', $roll)
+                ->update(['final_result' => $finalResult]);
+            }
 
         return response()->json(['message' => 'Final result update completed.']);
     }
