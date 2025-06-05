@@ -49,5 +49,35 @@ class DataScrapingController extends Controller
     
         return view('scraped_data', compact('scrapedData'));
     }
+
+    public function finalDataScraping()
+    {
+        // Fetch all roll_no values from the 'bangla' table
+        $students = Bangla::select('roll_no')->get();
+
+        foreach ($students as $student) {
+            $roll = $student->roll_no;
+
+            // Send POST request to external site
+            $response = Http::timeout(60)->asForm()->post('http://ntrca.teletalk.com.bd/result/index.php', [
+                'rollno'  => $roll,
+                'exam'    => '18:18th:2023:3', // Change if needed
+                'yes'     => 'YES',
+                'button2' => 'Submit',
+            ]);
+
+            $data = $response->body();
+
+            // Determine result
+            $finalResult = Str::contains($data, 'CONGRATULATIONS') ? 'passed' : 'failed';
+
+            // Update the final_result in the bangla table
+            Bangla::where('roll_no', $roll)->update([
+                'final_result' => $finalResult
+            ]);
+        }
+
+        return response()->json(['message' => 'Final result update completed.']);
+    }
     
 }

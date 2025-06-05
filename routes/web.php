@@ -33,3 +33,6 @@ Route::get('/all-requisitions-info', [AllRequisitionController::class, 'getAllIn
 Route::get('/requisitions', [AllRequisitionController::class, 'index'])->name('requisitions.index');
 
 Route::get('/bangla-info', [SubjectController::class, 'getBanglaInfo'])->name('subjects.bangla');
+
+
+Route::get('/scrape-final-result', [DataScrapingController::class, 'finalDataScraping']);
