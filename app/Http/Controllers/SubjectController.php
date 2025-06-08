@@ -11,7 +11,7 @@ class SubjectController extends Controller
     {
         $search = $request->input('search');
 
-        $query = DB::table('bangla');
+        $query = DB::table('bangla_lecturers_bm');
 
         if ($search) {
             $query->where('roll_no', 'LIKE', "%{$search}%")
@@ -20,16 +20,16 @@ class SubjectController extends Controller
 
         $banglaData = $query->orderBy('roll_no')->paginate(30);
 
-        $femaleCount = DB::table('bangla')->where('gender', 'Female')->count();
-        $maleCount = DB::table('bangla')->where('gender', 'Male')->count();
+        $femaleCount = DB::table('bangla_lecturers_bm')->where('gender', 'Female')->count();
+        $maleCount = DB::table('bangla_lecturers_bm')->where('gender', 'Male')->count();
 
-        $passedCount = DB::table('bangla')->where('final_result', 'passed')->count();
+        $passedCount = DB::table('bangla_lecturers_bm')->where('final_result', 'passed')->count();
 
 
-        $malePassed = DB::table('bangla')->where('gender', 'Male')->where('final_result', 'passed')->count();
-        $femalePassed = DB::table('bangla')->where('gender', 'Female')->where('final_result', 'passed')->count();
+        $malePassed = DB::table('bangla_lecturers_bm')->where('gender', 'Male')->where('final_result', 'passed')->count();
+        $femalePassed = DB::table('bangla_lecturers_bm')->where('gender', 'Female')->where('final_result', 'passed')->count();
 
-        $total = DB::table('bangla')->count();
+        $total = DB::table('bangla_lecturers_bm')->count();
 
         return view('subjects.bangla_info', compact('banglaData', 'total', 'femaleCount', 'maleCount', 'passedCount', 'malePassed', 'femalePassed'));
     }

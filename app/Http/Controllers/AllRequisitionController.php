@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Http;
 use App\Models\AllRequisition;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class AllRequisitionController extends Controller
 {
@@ -150,53 +151,10 @@ class AllRequisitionController extends Controller
 
 
 
-
-
-
     public function index(Request $request)
     {
         // Build the filtered query.
-        $query = AllRequisition::query();
-
-        if ($request->filled('subject')) {
-            $query->where('subject', 'LIKE', '%' . $request->subject . '%');
-        }
-        if ($request->filled('post_name')) {
-            $query->where('post_name', 'LIKE', '%' . $request->post_name . '%');
-        }
-        if ($request->filled('district')) {
-            $query->where('district', 'LIKE', '%' . $request->district . '%');
-        }
-        if ($request->filled('apply_for')) {
-            $query->where('apply_for',  $request->apply_for);
-        }
-
-        if ($request->filled('institute_type')) {
-
-            if ($request->institute_type === 'madrasha') {
-                $query->where(function ($q) {
-                    $q->where('name_of_institute', 'LIKE', '%MADRASHA%')
-                      ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
-                      ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
-                      ->orWhere('name_of_institute', 'LIKE', '%MADRSHA%')
-                      ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%')
-                      ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%');
-                });
-            } else {
-                $query->where(function ($q) use ($request) {
-                    $q->where('name_of_institute', 'NOT LIKE', '%MADRASHA%')
-                      ->where('name_of_institute', 'NOT LIKE', '%MADRASA%')
-                      ->where('name_of_institute', 'NOT LIKE', '%MADRASH%')
-                      ->where('name_of_institute', 'NOT LIKE', '%MADRSASHA%')
-                      ->where('name_of_institute', 'NOT LIKE', '%MADRSHA%')
-                      ->where('name_of_institute', 'NOT LIKE', '%MADRASAH%');
-                });
-            }
-            
-           
-        }
-
-        // dd($request->institute_type);
+        $query = $this->buildFilterQuery($request);
 
 
         // Clone the query for totals before pagination.
@@ -216,12 +174,119 @@ class AllRequisitionController extends Controller
         $demonstrator  = (clone $query)->where('post_name', 'Demonstrator')->count();
 
         // Paginate the filtered results.
-        $requisitions = $query->paginate(15)->appends($request->query());
+        $requisitions = $query->paginate(20)->appends($request->query());
 
         // Pass all filtered totals to the view.
         return view('requisitions.index', compact(
             'requisitions', 'filtered_total', 'filtered_madrasah', 'filtered_general', 'filtered_female', 'lecturer', 'demonstrator',
         ));
     }
+
+
+
+    private function buildFilterQuery(Request $request)
+    {
+        $query = AllRequisition::query();
+
+        if ($request->filled('subject')) {
+            $query->where('subject', 'LIKE', '%' . $request->subject . '%');
+        }
+        if ($request->filled('post_name')) {
+            $query->where('post_name', 'LIKE', '%' . $request->post_name . '%');
+        }
+        if ($request->filled('district')) {
+            $query->where('district', 'LIKE', '%' . $request->district . '%');
+        }
+        if ($request->filled('apply_for')) {
+            $query->where('apply_for', $request->apply_for);
+        }
+
+        if ($request->filled('institute_type')) {
+            if ($request->institute_type === 'madrasha') {
+                $query->where(function ($q) {
+                    $q->where('name_of_institute', 'LIKE', '%MADRASHA%')
+                    ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
+                    ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
+                    ->orWhere('name_of_institute', 'LIKE', '%MADRSHA%')
+                    ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%')
+                    ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%');
+                });
+            } else {
+                $query->where(function ($q) {
+                    $q->where('name_of_institute', 'NOT LIKE', '%MADRASHA%')
+                    ->where('name_of_institute', 'NOT LIKE', '%MADRASA%')
+                    ->where('name_of_institute', 'NOT LIKE', '%MADRASH%')
+                    ->where('name_of_institute', 'NOT LIKE', '%MADRSASHA%')
+                    ->where('name_of_institute', 'NOT LIKE', '%MADRSHA%')
+                    ->where('name_of_institute', 'NOT LIKE', '%MADRASAH%');
+                });
+            }
+        }
+
+        return $query;
+    }
+
+
+
+    public function exportingPdfVecancy(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        ini_set('max_execution_time', 300);
+
+        // Limit results to avoid overload
+        $vacants = $this->buildFilterQuery($request)->limit(500)->get();
+
+        $html = '
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body { font-family: sans-serif; margin: 20px; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid black; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <h1>Vacancy List</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Serial</th>
+                        <th>Institute Name</th>
+                        <th>Subject</th>
+                        <th>Post For</th>
+                        <th>District</th>
+                        <th>Thana</th>
+                    </tr>
+                </thead>
+                <tbody>';
+
+        $serial = 1;
+        foreach ($vacants as $vacancy) {
+            $html .= '<tr>';
+            $html .= '<td>' . $serial++ . '</td>';
+            $html .= '<td>' . $vacancy->name_of_institute . '</td>';
+            $html .= '<td>' . $vacancy->subject . '</td>';
+            $html .= '<td>' . $vacancy->post_name . '</td>';
+            $html .= '<td>' . $vacancy->district . '</td>';
+            $html .= '<td>' . $vacancy->thana . '</td>';
+            $html .= '</tr>';
+        }
+
+        $html .= '</tbody></table></body></html>';
+
+        $pdf = Pdf::loadHTML($html)
+            ->setPaper('a4', 'landscape')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'dpi' => 96,
+                'defaultFont' => 'sans-serif',
+            ]);
+
+        return $pdf->download('vacancy-pdf-export.pdf');
+    }
+
     
 }

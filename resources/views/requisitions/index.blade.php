@@ -106,9 +106,21 @@
                     </select>
                 </div>
                 <div class="col-12 text-center mt-3">
-                    <button type="submit" class="btn btn-primary me-2">Filter</button>
-                    <a href="{{ route('requisitions.index') }}" class="btn btn-secondary">Reset</a>
+                    {{-- Filter form --}}
+                    <form action="{{ route('requisitions.index') }}" method="GET" class="d-inline">
+                        <button type="submit" class="btn btn-primary me-2">Filter</button>
+                    </form>
+
+                    {{-- Reset button --}}
+                    <a href="{{ route('requisitions.index') }}" class="btn btn-secondary me-2">Reset</a>
+
+                    {{-- Export PDF form --}}
+                    <form action="{{ route('vacancy.exportPdf') }}" method="GET" target="_blank" class="d-inline">
+                        <input type="hidden" name="filter" id="exportFilterPdf" value="0">
+                        <button type="submit" class="btn btn-danger">Export PDF</button>
+                    </form>
                 </div>
+
             </form>
         </div>
     </div>
