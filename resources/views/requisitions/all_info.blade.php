@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body class="container mt-4">
-    <h1 class="text-center">Requisition Information</h1>
+    <h1 class="text-center">Requisition Information For Bangla (Lecturer)</h1>
 
     <div class="alert alert-primary">
         <p><strong>Total:</strong> {{ $total }}</p>
         <p><strong>Madrasah Total:</strong> {{ $madrasahTotal }}</p>
         <p><strong>General Total:</strong> {{ $generalTotal }}</p>
-        <p><strong>Female Only Total:</strong> {{ $femaleOnlyTotal }}</p>
+        <!-- <p><strong>Female Only Total:</strong> {{ $femaleOnlyTotal }}</p> -->
     </div>
 
     <table class="table table-bordered table-striped">

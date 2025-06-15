@@ -45,3 +45,6 @@ Route::get('/scrape-final-result-political-science', [DataScrapingController::cl
 Route::get('/scrape-data-17', [DataScrapingController::class, 'data_scraping17']);
 
 Route::get('all-vacancy/download-pdf', [AllRequisitionController::class, 'exportingPdfVecancy'])->name('vacancy.exportPdf');
+
+
+Route::get('/demonstrator-checking-data', [DataScrapingController::class, 'data_scrapingBotany']);

@@ -104,16 +104,33 @@ class AllRequisitionController extends Controller
     public function getAllInfo()
     {
         // Total count of all records
-        $total = AllRequisition::count();
+        // $total = AllRequisition::count();
+        $total = AllRequisition::where('post_name', 'Lecturer')
+    ->where('subject', 'Bengali')
+    ->count();
+
     
         // Total MADRASAH count (MADRASHA, MADRASA, and MADRASAH, MADRSHA, MADRSASHA)
-        $madrasahTotal = AllRequisition::where('name_of_institute', 'LIKE', '%MADRASHA%')
+        // $madrasahTotal = AllRequisition::where('name_of_institute', 'LIKE', '%MADRASHA%')
+        //     ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
+        //     ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%')
+        //     ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
+        //     ->orWhere('name_of_institute', 'LIKE', '%MADRSHA%')
+        //     ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%')
+        //     ->count();
+
+        $madrasahTotal = AllRequisition::where('post_name', 'Lecturer')
+    ->where('subject', 'Bengali')
+    ->where(function ($query) {
+        $query->where('name_of_institute', 'LIKE', '%MADRASHA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASA%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRASH%')
             ->orWhere('name_of_institute', 'LIKE', '%MADRSHA%')
-            ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%')
-            ->count();
+            ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%');
+    })
+    ->count();
+
     
         // Total general count (all - MADRASHA count)
         $generalTotal = $total - $madrasahTotal;
@@ -122,14 +139,42 @@ class AllRequisitionController extends Controller
         $femaleOnlyTotal = AllRequisition::where('apply_for', 'LIKE', '%Female only%')->count();
     
         // District-wise count for both MADRASAH and General
-        $districtCounts = AllRequisition::groupBy('district')
-            ->selectRaw('district, count(*) as total_count, 
-                        sum(case when name_of_institute LIKE "%MADRASHA%" or 
-                                  name_of_institute LIKE "%MADRASA%" or name_of_institute LIKE "%MADRASH%" or 
-                                  name_of_institute LIKE "%MADRSHA%" or name_of_institute LIKE "%MADRSASHA%" or
-                                  name_of_institute LIKE "%MADRASAH%" then 1 else 0 end) as madrasa_count,
-                        sum(case when apply_for LIKE "%Female only%" then 1 else 0 end) as female_seat')
-            ->get();
+        // $districtCounts = AllRequisition::groupBy('district')
+        //     ->selectRaw('district, count(*) as total_count, 
+        //                 sum(case when name_of_institute LIKE "%MADRASHA%" or 
+        //                           name_of_institute LIKE "%MADRASA%" or name_of_institute LIKE "%MADRASH%" or 
+        //                           name_of_institute LIKE "%MADRSHA%" or name_of_institute LIKE "%MADRSASHA%" or
+        //                           name_of_institute LIKE "%MADRASAH%" then 1 else 0 end) as madrasa_count,
+        //                 sum(case when apply_for LIKE "%Female only%" then 1 else 0 end) as female_seat')
+        //     ->get();
+
+        $districtCounts = AllRequisition::where('post_name', 'Lecturer')
+        ->where('subject', 'Bengali')
+        ->groupBy('district')
+        ->selectRaw('
+            district,
+            count(*) as total_count,
+            sum(
+                case
+                    when name_of_institute LIKE "%MADRASHA%" OR
+                        name_of_institute LIKE "%MADRASA%" OR
+                        name_of_institute LIKE "%MADRASH%" OR
+                        name_of_institute LIKE "%MADRSHA%" OR
+                        name_of_institute LIKE "%MADRSASHA%" OR
+                        name_of_institute LIKE "%MADRASAH%"
+                    then 1
+                    else 0
+                end
+            ) as madrasa_count,
+            sum(
+                case
+                    when apply_for LIKE "%Female only%" then 1
+                    else 0
+                end
+            ) as female_seat
+        ')
+        ->get();
+
     
         // Calculate General count for each district (total - madrasa_count)
         foreach ($districtCounts as $districtCount) {
@@ -231,10 +276,10 @@ class AllRequisitionController extends Controller
     public function exportingPdfVecancy(Request $request)
     {
         ini_set('memory_limit', '1024M');
-        ini_set('max_execution_time', 300);
+        ini_set('max_execution_time', 600);
 
         // Limit results to avoid overload
-        $vacants = $this->buildFilterQuery($request)->limit(500)->get();
+        $vacants = $this->buildFilterQuery($request)->limit(600)->get();
 
         $html = '
         <html>
