@@ -4,7 +4,11 @@
 
 @section('content')
 <div class="container mt-4">
-    <h2 class="mb-4 text-center">Requisition List For NTRCA</h2>
+    <div class="text-center my-4">
+    <h2 class="fw-bold text-primary">এনটিআরসিএ ৬ষ্ঠ গণবিজ্ঞপ্তির শূন্যপদের তালিকা:</h2>
+    <p class="text-muted fst-italic">Developed by Ramananda Sarkar- 01738039685</p>
+    </div>
+
 
     <!-- Filter Form -->
     <div class="card mb-4 shadow-sm">
@@ -87,14 +91,14 @@
                     <option value="LAKSHMIPUR" {{ request('district') == 'LAKSHMIPUR' ? 'selected' : '' }}>LAKSHMIPUR</option>
                     <option value="NOAKHALI" {{ request('district') == 'NOAKHALI' ? 'selected' : '' }}>NOAKHALI</option>
                 </select>                </div>
-                <div class="col-md-2">
+                <!-- <div class="col-md-2">
                     <label for="apply_for" class="form-label">Apply For</label>
                     <select name="apply_for" id="apply_for" class="form-select">
                         <option value="">All</option>
                         <option value="Female only" {{ request('apply_for')=='Female only' ? 'selected' : '' }}>Female only</option>
                         
                     </select>
-                </div>
+                </div> -->
 
                 <div class="col-md-2">
                     <label for="institute_type" class="form-label">Institute Type</label>
@@ -102,6 +106,8 @@
                         <option value="">All</option>
                         <option value="general" {{ request('institute_type')=='general' ? 'selected' : '' }}>General</option>
                         <option value="madrasha" {{ request('institute_type')=='madrasha' ? 'selected' : '' }}>Madrasha</option>
+                        <option value="technical" {{ request('institute_type')=='technical' ? 'selected' : '' }}>Technical</option>
+
 
                     </select>
                 </div>
@@ -136,7 +142,7 @@
         <strong>Total:</strong> {{ $filtered_total }} |
         <strong>Madrasah:</strong> {{ $filtered_madrasah }} |
         <strong>General:</strong> {{ $filtered_general }} |
-        <strong>Female Only:</strong> {{ $filtered_female }} | 
+        <!-- <strong>Technical:</strong> {{ $filtered_female }} |  -->
         <strong>Lecturer:</strong> {{ $lecturer }} | 
         <strong>Demonstrator:</strong> {{ $demonstrator }}
 
@@ -153,7 +159,7 @@
                 <th>Post For</th>
                 <th>District</th>
                 <th>Thana</th>
-                <th>Apply For</th>
+                <!-- <th>Apply For</th> -->
             </tr>
         </thead>
         <tbody>
@@ -167,7 +173,7 @@
 
                 <td>{{ $req->district }}</td>
                 <td>{{ $req->thana }}</td>
-                <td>{{ $req->apply_for }}</td>
+                <!-- <td>{{ $req->apply_for }}</td> -->
             </tr>
             @endforeach
         </tbody>

@@ -13,26 +13,27 @@ class AllRequisitionController extends Controller
 
     private $codes = [
         //701, 702, 703, 704, 705, 706, 707, 708,
-        // 109, 110, 111, 112, 113, 114, 115, 116,
+        //109, 110, 111, 112, 113, 114, 115, 116,
         // 305, 306, 307, 309, 308, 310,311, 312, 313, 314, 315, 316, 317
         // 201, 202, 203, 204, 205, 206, 207, 208, 209, 210
-        //501, 502, 503, 504, 505, 506
+        //501, 502, 503, 504 
+        //505, 506
         
         //601, 602,  603, 604
           
        
          //801, 802, 803, 804
-         //405, 406, 407, 408, 409,  410, 411, 412, 413, 414, 415
+         405, 406, 407, 408, 409,  410, 411, 412, 413, 414, 415
      ];
 
     public function fetchAndStoreData()
     {
         foreach ($this->codes as $code) {
-            $url = "http://103.230.104.210:8088/ntrca/c7/app/get_requisition_report_ngi3.php?type=district&code={$code}&demo=";
+            $url = "http://103.230.104.210:8088/ntrca/c6/app/get_requisition_report_ngi3.php?type=district&code={$code}&demo=";
 
             $response = Http::withHeaders([
                 'Content-Type' => 'application/x-www-form-urlencoded',
-                'Referer' => 'http://103.230.104.210:8088/ntrca/c7/app/requisition-list.php',
+                'Referer' => 'http://103.230.104.210:8088/ntrca/c6/app/requisition-list.php',
                 'Cookie' => 'PHPSESSID=tce6b70c5f0pbnu2fvn713337b',
             ])->asForm()->post($url, [
                 'type' => 'district',
@@ -184,8 +185,9 @@ class AllRequisitionController extends Controller
         // Return the data to the Blade view
         return view('requisitions.all_info', [
             'total' => $total,
-            'madrasahTotal' => $madrasahTotal,
-            'generalTotal' => $generalTotal,
+            // 'madrasahTotal' => $madrasahTotal,
+            'madrasahTotal' => 53501,
+            'generalTotal' => 46211,
             'femaleOnlyTotal' => $femaleOnlyTotal,
             'districtCounts' => $districtCounts,
         ]);
@@ -212,7 +214,12 @@ class AllRequisitionController extends Controller
               ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%')
               ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%');
         })->count();
-        $filtered_female  = (clone $query)->where('apply_for', 'Female only')->count();
+
+        //$filtered_madrasah = 53501;
+
+        //$filtered_female  = (clone $query)->where('apply_for', 'Female only')->count();
+        $filtered_female  = 1110;
+
         $filtered_general = $filtered_total - $filtered_madrasah;
 
         $lecturer  = (clone $query)->where('post_name', 'Lecturer')->count();
@@ -255,6 +262,12 @@ class AllRequisitionController extends Controller
                     ->orWhere('name_of_institute', 'LIKE', '%MADRSHA%')
                     ->orWhere('name_of_institute', 'LIKE', '%MADRSASHA%')
                     ->orWhere('name_of_institute', 'LIKE', '%MADRASAH%');
+                });
+            } else if ($request->institute_type === 'technical') {
+                $query->where(function ($q) {
+                    $q->where('name_of_institute', 'LIKE', '%technical%')
+                    ->orWhere('name_of_institute', 'LIKE', '%BUISINESS%');
+                  
                 });
             } else {
                 $query->where(function ($q) {
