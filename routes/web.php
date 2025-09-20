@@ -36,3 +36,15 @@ Route::get('/bangla-info', [SubjectController::class, 'getBanglaInfo'])->name('s
 
 
 Route::get('/scrape-final-result', [DataScrapingController::class, 'finalDataScraping']);
+
+Route::get('/scrape-final-result-physics', [DataScrapingController::class, 'finalDataScrapingPhysics']);
+
+Route::get('/scrape-final-result-political-science', [DataScrapingController::class, 'finalResultPoliticalScience']);
+
+
+Route::get('/scrape-data-17', [DataScrapingController::class, 'data_scraping17']);
+
+Route::get('all-vacancy/download-pdf', [AllRequisitionController::class, 'exportingPdfVecancy'])->name('vacancy.exportPdf');
+
+
+Route::get('/demonstrator-checking-data', [DataScrapingController::class, 'data_scrapingBotany']);

@@ -32,9 +32,14 @@
 
     <!-- Total Records Info -->
     <div class="alert alert-primary">
-        <p><strong>Total Records:</strong> {{ $total }}
-        <strong>, Male Records:</strong> {{ $maleCount }}
-        <strong>, Female Records:</strong> {{ $femaleCount }}</p>
+        <p><strong>Total Records: </strong> {{ $total }}
+        <strong>, Male Records: </strong> {{ $maleCount }}
+        <strong>, Female Records: </strong> {{ $femaleCount }}
+        <strong>, Final Passed Records: </strong> {{ $passedCount }}
+        <strong>, Final Passed Male: </strong> {{ $malePassed }}
+        <strong>, Final Passed Female: </strong> {{ $femalePassed }}
+
+    </p>
 
     </div>
 
@@ -46,6 +51,7 @@
                 <th>Roll No</th>
                 <th>Name</th>
                 <th>Gender</th>
+                <th>Final Result</th>
 
             </tr>
         </thead>
@@ -74,6 +80,7 @@
                     <td>{!! highlightSearch($data->roll_no, request('search')) !!}</td>
                     <td>{!! highlightSearch($data->name, request('search')) !!}</td>
                     <td>{!! highlightSearch($data->gender, request('search')) !!}</td>
+                    <td>{!! highlightSearch($data->final_result, request('search')) !!}</td>
 
                 </tr>
             @endforeach
