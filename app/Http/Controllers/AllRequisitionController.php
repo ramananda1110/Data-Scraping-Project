@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\AllRequisition;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 
 class AllRequisitionController extends Controller
 {
@@ -43,13 +44,13 @@ class AllRequisitionController extends Controller
                 'length' => 10000,
             ]);
 
-            \Log::info("Response body:", ['body' => $response->body()]);
+            Log::info("Response body:", ['body' => $response->body()]);
 
             $data = $response->json();
-            \Log::info("Decoded JSON:", ['data' => $data]);
+            Log::info("Decoded JSON:", ['data' => $data]);
 
             if (!isset($data['data']) || empty($data['data'])) {
-                \Log::warning("No data received for code: $code");
+                Log::warning("No data received for code: $code");
                 continue;
             }
 

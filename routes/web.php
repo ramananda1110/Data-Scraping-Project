@@ -9,6 +9,7 @@ use App\Http\Controllers\RequisitionController;
 use App\Http\Controllers\AllRequisitionController;
 use App\Http\Controllers\SubjectController;
 
+use App\Http\Controllers\MeritListController;
 
 
 // Home route with name 'home'
@@ -48,3 +49,10 @@ Route::get('all-vacancy/download-pdf', [AllRequisitionController::class, 'export
 
 
 Route::get('/demonstrator-checking-data', [DataScrapingController::class, 'data_scrapingBotany']);
+
+
+
+
+Route::get('/merit-lists', [MeritListController::class, 'index']);
+Route::get('/fetch-merit-lists', [MeritListController::class, 'fetchAndStore']);
+Route::get('/update-recommended-institutes', [MeritListController::class, 'updateRecommendedInstitutes']);
