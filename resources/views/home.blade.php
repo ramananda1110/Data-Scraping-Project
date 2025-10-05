@@ -63,7 +63,10 @@
             <a href="{{ route('view.data') }}" class="btn btn-primary btn-custom">📄 View Data</a> -->
             <a href="{{ route('requisitions.index') }}" class="btn btn-success btn-custom">📌 ৬ষ্ঠ গণবিজ্ঞপ্তির শূন্যপদের তালিকা</a>
             <a href="{{ route('requisitions.district') }}" class="btn btn-primary btn-custom">📍 District Wise Vacancy For Bangla</a>
-            <!-- <a href="{{ route('subjects.bangla') }}" class="btn btn-danger btn-custom">📘 Bangla Candidates</a> -->
+            <a href="{{ route('subjects.bangla') }}" class="btn btn-danger btn-custom">📘 Bangla Candidates</a>
+
+            <a href="{{ route('recommended.index') }}" class="btn btn-success btn-custom">📘 Recommended Result  Bangla Lecturer</a>
+
         </div>
     </div>
 

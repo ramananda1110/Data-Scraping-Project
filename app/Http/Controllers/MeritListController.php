@@ -56,11 +56,47 @@ class MeritListController extends Controller
         ]);
     }
 
-    public function index()
+   public function index(Request $request)
     {
-        // Fetch only batch 18 data
-        return MeritList::where('batch', 18)->get();
+        $query = MeritList::where('id', '<=', 1441);
+
+        // optional search filter
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('roll', 'like', "%{$search}%")
+                ->orWhere('applicant_name', 'like', "%{$search}%")
+                ->orWhere('recommend_institute', 'like', "%{$search}%");
+            });
+        }
+
+          if ($request->filled('institute_type')) {
+            if ($request->institute_type === 'general') {
+                $query->where(function ($q) {
+                    $q->where('institute_type', 'LIKE', '%general%');
+                });
+            } else if ($request->institute_type === 'bm') {
+                $query->where(function ($q) {
+                    $q->where('institute_type', 'LIKE', '%bm%');
+                });
+            } 
+        }
+
+        // paginate instead of get()
+        $listOfData = $query->orderBy('id', 'asc')->paginate(20);
+       
+        $total_recommended = MeritList::where('batch', 18)
+        ->where('recommend_institute', '!=', 'N/A')
+        ->count();
+
+        // $total_recommended = MeritList::where('id', '<=', 1441)
+        // ->where('recommend_institute', '!=', 'N/A')
+        // ->count();
+        $not_recommended = $query->count() - $total_recommended;
+
+        return view('subjects.recommended_bangla_lect', compact('listOfData', 'total_recommended', 'not_recommended'));
     }
+
 
 
     public function updateRecommendedInstitutes()

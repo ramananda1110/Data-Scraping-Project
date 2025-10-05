@@ -53,6 +53,8 @@ Route::get('/demonstrator-checking-data', [DataScrapingController::class, 'data_
 
 
 
-Route::get('/merit-lists', [MeritListController::class, 'index']);
+// collected data for recommend meril list
+
+Route::get('/merit-lists', [MeritListController::class, 'index'])->name('recommended.index');
 Route::get('/fetch-merit-lists', [MeritListController::class, 'fetchAndStore']);
 Route::get('/update-recommended-institutes', [MeritListController::class, 'updateRecommendedInstitutes']);
