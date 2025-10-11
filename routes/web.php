@@ -58,3 +58,4 @@ Route::get('/demonstrator-checking-data', [DataScrapingController::class, 'data_
 Route::get('/merit-lists', [MeritListController::class, 'index'])->name('recommended.index');
 Route::get('/fetch-merit-lists', [MeritListController::class, 'fetchAndStore']);
 Route::get('/update-recommended-institutes', [MeritListController::class, 'updateRecommendedInstitutes']);
+Route::get('/all-merit/merit-position-pdf', [MeritListController::class, 'exportingPdfSelectCandidate'])->name('merit.exportPdf');

@@ -6,6 +6,7 @@ use App\Models\MeritList;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class MeritListController extends Controller
 {
@@ -141,4 +142,84 @@ class MeritListController extends Controller
         ]);
     }
 
+
+     public function exportingPdfSelectCandidate(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        ini_set('max_execution_time', 600);
+
+        
+        $query = MeritList::query();
+
+       
+
+        if ($request->filled('institute_type')) {
+            if ($request->institute_type === 'general') {
+                $query->where(function ($q) {
+                    $q->where('institute_type', 'LIKE', '%general%');
+                });
+            } else if ($request->institute_type === 'bm') {
+                $query->where(function ($q) {
+                    $q->where('institute_type', 'LIKE', '%bm%');
+                });
+            } 
+        }
+
+         // 👇 Fetch actual results
+        $results = $query->get();
+
+
+        $html = '
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                body { font-family: sans-serif; margin: 20px; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { border: 1px solid black; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; }
+            </style>
+        </head>
+        <body>
+            <h1>Vacancy List</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Serial</th>
+                        <th>Rank</th>
+                        <th>Batch</th>
+                        <th>Marks</th>
+                        <th>Applicant Name</th>
+                        <th>Type</th>
+                        <th>Recommended Institute</th>	
+                    </tr>
+                </thead>
+                <tbody>';
+
+        $serial = 1;
+        foreach ($results as $data) {
+            $html .= '<tr>';
+            $html .= '<td>' . $serial++ . '</td>';
+            $html .= '<td>' . $data->id . '</td>';
+            $html .= '<td>' . $data->batch . '</td>';
+            $html .= '<td>' . $data->marks . '</td>';
+            $html .= '<td>' . $data->applicant_name . '</td>';
+            $html .= '<td>' . $data->institute_type . '</td>';
+            $html .= '<td>' . $data->recommend_institute . '</td>';
+            $html .= '</tr>';
+        }
+
+         $html .= '</tbody></table></body></html>';
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)
+            ->setPaper('a4', 'landscape')
+            ->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true,
+                'dpi' => 96,
+                'defaultFont' => 'sans-serif',
+            ]);
+
+        return $pdf->download('merit-pdf-export.pdf');
+    }
 }

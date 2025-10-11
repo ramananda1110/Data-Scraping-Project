@@ -51,11 +51,8 @@
                 <a href="{{ route('recommended.index') }}" class="btn btn-secondary me-2">Reset</a>
 
                 {{-- Export PDF form --}}
-                <form action="{{ route('vacancy.exportPdf') }}" method="GET" class="d-inline">
-                    <input type="hidden" name="subject" value="{{ request('subject') }}">
-                    <input type="hidden" name="post_name" value="{{ request('post_name') }}">
-                    <input type="hidden" name="district" value="{{ request('district') }}">
-                    <input type="hidden" name="apply_for" value="{{ request('apply_for') }}">
+                <form action="{{ route('merit.exportPdf') }}" method="GET" class="d-inline">
+                    
                     <input type="hidden" name="institute_type" value="{{ request('institute_type') }}">
 
                     <button type="submit" class="btn btn-danger">Export PDF</button>
@@ -73,7 +70,7 @@
     <table class="table table-bordered table-striped">
         <thead class="table-dark">
             <tr>
-                <th>#</th> <!-- Serial Number -->
+                <th>SL:</th> <!-- Serial Number -->
                 <th>Roll No</th>
                 <th>Rank</th>
                 <th>Name</th>
