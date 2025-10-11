@@ -181,12 +181,11 @@ class MeritListController extends Controller
             </style>
         </head>
         <body>
-            <h1>Vacancy List</h1>
+            <h1>Candidate List With Selected Insitute</h1>
             <table>
                 <thead>
                     <tr>
-                        <th>Serial</th>
-                        <th>Rank</th>
+                        <th>Serial/Rank</th>
                         <th>Batch</th>
                         <th>Marks</th>
                         <th>Applicant Name</th>
@@ -196,10 +195,8 @@ class MeritListController extends Controller
                 </thead>
                 <tbody>';
 
-        $serial = 1;
         foreach ($results as $data) {
             $html .= '<tr>';
-            $html .= '<td>' . $serial++ . '</td>';
             $html .= '<td>' . $data->id . '</td>';
             $html .= '<td>' . $data->batch . '</td>';
             $html .= '<td>' . $data->marks . '</td>';
@@ -209,9 +206,9 @@ class MeritListController extends Controller
             $html .= '</tr>';
         }
 
-         $html .= '</tbody></table></body></html>';
+        $html .= '</tbody></table></body></html>';
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadHTML($html)
+        $pdf = Pdf::loadHTML($html)
             ->setPaper('a4', 'landscape')
             ->setOptions([
                 'isHtml5ParserEnabled' => true,
