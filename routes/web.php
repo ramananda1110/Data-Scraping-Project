@@ -7,6 +7,7 @@ use App\Http\Controllers\DataScrapingController;
 use App\Http\Controllers\RequisitionController;
 
 use App\Http\Controllers\AllRequisitionController;
+use App\Http\Controllers\RequisitionNewController;
 use App\Http\Controllers\SubjectController;
 
 use App\Http\Controllers\MeritListController;
@@ -29,9 +30,16 @@ Route::get('/all-info', [RequisitionController::class, 'getAllInfo']);
 Route::get('/fetch-all-requisitions', [AllRequisitionController::class, 'fetchAndStoreData']);
 Route::get('/all-requisitions', [AllRequisitionController::class, 'getAllRecords']);
 
+Route::get('/all-requisitions-7th', [RequisitionNewController::class, 'getAllRecords7th']);
+
+Route::get('/fetch-all-requisitions-7th', [RequisitionNewController::class, 'fetchAndStoreData7th']);
+
+
 Route::get('/all-requisitions-info', [AllRequisitionController::class, 'getAllInfo'])->name('requisitions.district');
 
 Route::get('/requisitions', [AllRequisitionController::class, 'index'])->name('requisitions.index');
+Route::get('/requisitions-7th', [RequisitionNewController::class, 'index'])->name('requisitions.index_7th');
+
 
 Route::get('/bangla-info', [SubjectController::class, 'getBanglaInfo'])->name('subjects.bangla');
 

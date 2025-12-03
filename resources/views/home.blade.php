@@ -61,6 +61,7 @@
         <div class="mt-4">
             <!-- <a href="{{ route('scrape.data') }}" class="btn btn-success btn-custom">🔍 Scrape Data</a>
             <a href="{{ route('view.data') }}" class="btn btn-primary btn-custom">📄 View Data</a> -->
+            <a href="{{ route('requisitions.index_7th') }}" class="btn btn-success btn-custom">📌 ৭ম গণবিজ্ঞপ্তির শূন্যপদের তালিকা</a>
             <a href="{{ route('requisitions.index') }}" class="btn btn-success btn-custom">📌 ৬ষ্ঠ গণবিজ্ঞপ্তির শূন্যপদের তালিকা</a>
             <a href="{{ route('requisitions.district') }}" class="btn btn-primary btn-custom">📍 District Wise Vacancy For Bangla</a>
             <a href="{{ route('subjects.bangla') }}" class="btn btn-danger btn-custom">📘 Bangla Candidates</a>
