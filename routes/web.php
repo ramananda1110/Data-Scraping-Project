@@ -55,6 +55,7 @@ Route::get('/scrape-data-17', [DataScrapingController::class, 'data_scraping17']
 
 Route::get('all-vacancy/download-pdf', [AllRequisitionController::class, 'exportingPdfVecancy'])->name('vacancy.exportPdf');
 
+Route::get('all-vacancy-7th/download-pdf', [RequisitionNewController::class, 'exportingPdfVecancy'])->name('vacancy.exportPdf7th');
 
 Route::get('/demonstrator-checking-data', [DataScrapingController::class, 'data_scrapingBotany']);
 
