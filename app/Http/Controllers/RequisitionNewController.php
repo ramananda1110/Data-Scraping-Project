@@ -346,5 +346,46 @@ class RequisitionNewController extends Controller
         return $pdf->download('vacancy-pdf-export.pdf');
     }
 
-    
+    public function exportingCsvVacancy(Request $request)
+    {
+    ini_set('memory_limit', '1024M');
+    ini_set('max_execution_time', 600);
+
+    // Get filtered results (use your existing filter query)
+    $vacants = $this->buildFilterQuery($request)->limit(600)->get();
+
+    // Define CSV headers
+    $headers = [
+        'Content-Type' => 'text/csv',
+        'Content-Disposition' => 'attachment; filename="vacancy-export.csv"',
+    ];
+
+    $columns = ['Serial', 'Institute Name', 'Subject', 'Post For', 'District', 'Thana'];
+
+    // Callback to write CSV content
+    $callback = function() use ($vacants, $columns) {
+        $file = fopen('php://output', 'w');
+
+        // Add header row
+        fputcsv($file, $columns);
+
+        $serial = 1;
+        foreach ($vacants as $vacancy) {
+            $row = [
+                $serial++,
+                $vacancy->name_of_institute,
+                $vacancy->subject,
+                $vacancy->post_name,
+                $vacancy->district,
+                $vacancy->thana,
+            ];
+            fputcsv($file, $row);
+        }
+
+        fclose($file);
+    };
+
+    return response()->stream($callback, 200, $headers);
+    }
+
 }
