@@ -31,8 +31,14 @@
                 
              <div class="col-md-3">
                   <label for="subject" class="form-label">Filter By</label>
-                  <input type="text" name="search" class="form-control" placeholder="Search by Roll No or Name" value="{{ request('search') }}">
+                  <input type="text" name="search" class="form-control" placeholder="Filter by Roll or Name or District" value="{{ request('search') }}">
              </div>
+             
+            <div class="col-md-3">
+                  <label for="subject" class="form-label">Filter By Marks</label>
+                  <input type="text" name="marks" class="form-control" placeholder="Type marks" value="{{ request('search') }}">
+             </div>
+
             <div class="col-md-2">
                 <label for="institute_type" class="form-label">Institute Type</label>
                 <select name="institute_type" id="institute_type" class="form-select">
@@ -53,8 +59,9 @@
                 {{-- Export PDF form --}}
                 <form action="{{ route('merit.exportPdf') }}" method="GET" class="d-inline">
                     
-                    <input type="hidden" name="institute_type" value="{{ request('institute_type') }}">
-
+                    <!-- <input type="hidden" name="institute_type" value="{{ request('institute_type') }}"> -->
+                    <input type="hidden" name="search" value="{{ request('search') }}">
+                    <input type="hidden" name="marks" value="{{ request('marks') }}">
                     <button type="submit" class="btn btn-danger">Export PDF</button>
                 </form>
 
@@ -77,6 +84,8 @@
                 <th>Marks</th>
                 <th>Institute Type</th>
                 <th>Recommend Institute</th>
+                <th>District</th>
+                <th>Thana</th>
 
             </tr>
         </thead>
@@ -107,8 +116,11 @@
                     <td>{{ $data->id}}</td>
                     <td>{!! highlightSearch($data->applicant_name, request('search')) !!}</td>
                     <td>{{$data->marks}}</td>
-                     <td>{{ $data->institute_type}}</td>
-                    <td>{!! highlightSearch($data->recommend_institute, request('search')) !!}</td>
+                    <td>{{ $data->institute_type}}</td>
+                     <td>{!! highlightSearch($data->recommend_institute, request('search')) !!}</td>
+                    <td>{{ $data->institute_district}}</td>
+                    <td>{{ $data->institute_thana}}</td>
+                   
 
                 </tr>
             @endforeach

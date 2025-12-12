@@ -286,27 +286,48 @@ class RequisitionNewController extends Controller
 
 
 
-    public function exportingPdfVecancy(Request $request)
+   public function exportingPdfVecancy(Request $request)
     {
-        ini_set('memory_limit', '1024M');
-        ini_set('max_execution_time', 600);
+        ini_set('memory_limit', '3048M');
+        ini_set('max_execution_time', 2000);
 
         // Limit results to avoid overload
-        $vacants = $this->buildFilterQuery($request)->limit(600)->get();
+        $vacants = $this->buildFilterQuery($request)->limit(2000)->get();
+
+        
 
         $html = '
         <html>
         <head>
             <meta charset="UTF-8">
             <style>
-                body { font-family: sans-serif; margin: 20px; }
-                table { border-collapse: collapse; width: 100%; }
+                body { font-family: sans-serif; margin: 20px; position: relative; }
+                table { border-collapse: collapse; width: 100%; margin-top: 20px; }
                 th, td { border: 1px solid black; padding: 8px; text-align: left; }
                 th { background-color: #f2f2f2; }
+                
+                /* Watermark */
+                .watermark {
+                    position: fixed;
+                    top: 45%;
+                    left: 25%;
+                    width: 50%;
+                    text-align: center;
+                    opacity: 0.1;
+                    font-size: 60px;
+                    transform: rotate(-45deg);
+                    z-index: -1000;
+                    color: #000;
+                }
+
+                h2.fw-bold.text-primary { color: #0d6efd; font-weight: bold; }
+                p.text-muted.fst-italic { color: #6c757d; font-style: italic; }
             </style>
         </head>
         <body>
-            <h1>Vacancy List</h1>
+            <h2 class="fw-bold text-primary">NTRCA 7th Public Notice Vacancy List:</h2>
+           
+            <div class="watermark">Dev by- Ramananda Sarkar- 01738039685s</div>
             <table>
                 <thead>
                     <tr>
@@ -343,8 +364,9 @@ class RequisitionNewController extends Controller
                 'defaultFont' => 'sans-serif',
             ]);
 
-        return $pdf->download('vacancy-pdf-export.pdf');
+        return $pdf->download('vacancy-export.pdf');
     }
+
 
     
 }

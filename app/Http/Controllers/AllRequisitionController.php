@@ -253,7 +253,9 @@ class AllRequisitionController extends Controller
         if ($request->filled('apply_for')) {
             $query->where('apply_for', $request->apply_for);
         }
-
+        if ($request->filled('name_of_institute')) {
+            $query->where('name_of_institute', 'LIKE', '%' . $request->name_of_institute . '%');
+        }
         if ($request->filled('institute_type')) {
             if ($request->institute_type === 'madrasha') {
                 $query->where(function ($q) {
