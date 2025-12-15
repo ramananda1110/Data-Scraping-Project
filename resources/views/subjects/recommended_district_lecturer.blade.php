@@ -88,7 +88,7 @@
                     {
                         label: 'Lowest Marks',
                         data: lowestMarks,
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)'
+                        backgroundColor: 'rgba(222, 236, 14, 0.5)'
                     },
                     {
                         label: 'Highest Marks',
