@@ -249,4 +249,74 @@ class MeritListController extends Controller
 
         return $pdf->download('merit-pdf-export.pdf');
     }
+
+    
+
+    public function recommendedDistrictLecturer()
+    {
+        // Base query (for table & chart)
+        $query = DB::table('merit_lists_bangla as m')
+            ->select(
+                'm.institute_district',
+                DB::raw('MIN(CAST(m.marks AS DECIMAL(5,2))) AS lowest_marks'),
+                DB::raw('MAX(CAST(m.marks AS DECIMAL(5,2))) AS highest_marks'),
+                DB::raw('(
+                    SELECT ml.recommend_institute
+                    FROM merit_lists_bangla ml
+                    WHERE ml.institute_district = m.institute_district
+                    AND ml.recommend_institute != "N/A"
+                    AND ml.marks IS NOT NULL
+                    AND ml.marks != ""
+                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) ASC
+                    LIMIT 1
+                ) AS lowest_institute'),
+                DB::raw('(
+                    SELECT ml.institute_thana
+                    FROM merit_lists_bangla ml
+                    WHERE ml.institute_district = m.institute_district
+                    AND ml.recommend_institute != "N/A"
+                    AND ml.marks IS NOT NULL
+                    AND ml.marks != ""
+                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) ASC
+                    LIMIT 1
+                ) AS lowest_thana'),
+                DB::raw('(
+                    SELECT ml.recommend_institute
+                    FROM merit_lists_bangla ml
+                    WHERE ml.institute_district = m.institute_district
+                    AND ml.recommend_institute != "N/A"
+                    AND ml.marks IS NOT NULL
+                    AND ml.marks != ""
+                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) DESC
+                    LIMIT 1
+                ) AS highest_institute'),
+                DB::raw('(
+                    SELECT ml.institute_thana
+                    FROM merit_lists_bangla ml
+                    WHERE ml.institute_district = m.institute_district
+                    AND ml.recommend_institute != "N/A"
+                    AND ml.marks IS NOT NULL
+                    AND ml.marks != ""
+                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) DESC
+                    LIMIT 1
+                ) AS highest_thana')
+            )
+            ->where('m.recommend_institute', '!=', 'N/A')
+            ->whereNotNull('m.institute_district')
+            ->where('m.institute_district', '!=', '')
+            ->whereNotNull('m.marks')
+            ->where('m.marks', '!=', '')
+            ->groupBy('m.institute_district')
+            ->orderBy(DB::raw('MIN(CAST(m.marks AS DECIMAL(5,2)))'), 'asc');
+
+        // Table data with pagination
+        $listOfData = $query->paginate(20);
+
+        // Chart data (no pagination)
+        $chartData = $query->get();
+
+        return view('subjects.recommended_district_lecturer', compact('listOfData', 'chartData'));
+    }
+
+
 }
