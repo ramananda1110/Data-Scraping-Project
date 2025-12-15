@@ -367,7 +367,7 @@ class RequisitionNewController extends Controller
         return $pdf->download('vacancy-export.pdf');
     }
 
-<<<<<<< HEAD
+
     public function exportingCsvVacancy(Request $request)
     {
     ini_set('memory_limit', '1024M');
@@ -410,8 +410,5 @@ class RequisitionNewController extends Controller
     return response()->stream($callback, 200, $headers);
     }
 
-=======
 
-    
->>>>>>> origin/development
 }
