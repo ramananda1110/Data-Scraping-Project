@@ -319,4 +319,69 @@ class MeritListController extends Controller
     }
 
 
+
+    public function recommendedRawDistrictLecturer()
+    {
+        $listOfData = DB::table('merit_lists_bangla as m')
+            ->select(
+                'm.institute_district',
+
+                // Lowest marks
+                DB::raw('MIN(CAST(m.marks AS DECIMAL(5,2))) AS lowest_marks'),
+                DB::raw('(
+                    SELECT ml.recommend_institute
+                    FROM merit_lists_bangla ml
+                    WHERE ml.institute_district = m.institute_district
+                    AND ml.recommend_institute != "N/A"
+                    AND ml.marks IS NOT NULL
+                    AND ml.marks != ""
+                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) ASC
+                    LIMIT 1
+                ) AS lowest_institute'),
+                DB::raw('(
+                    SELECT ml.institute_thana
+                    FROM merit_lists_bangla ml
+                    WHERE ml.institute_district = m.institute_district
+                    AND ml.recommend_institute != "N/A"
+                    AND ml.marks IS NOT NULL
+                    AND ml.marks != ""
+                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) ASC
+                    LIMIT 1
+                ) AS lowest_thana'),
+
+                // Highest marks
+                DB::raw('MAX(CAST(m.marks AS DECIMAL(5,2))) AS highest_marks'),
+                DB::raw('(
+                    SELECT ml.recommend_institute
+                    FROM merit_lists_bangla ml
+                    WHERE ml.institute_district = m.institute_district
+                    AND ml.recommend_institute != "N/A"
+                    AND ml.marks IS NOT NULL
+                    AND ml.marks != ""
+                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) DESC
+                    LIMIT 1
+                ) AS highest_institute'),
+                DB::raw('(
+                    SELECT ml.institute_thana
+                    FROM merit_lists_bangla ml
+                    WHERE ml.institute_district = m.institute_district
+                    AND ml.recommend_institute != "N/A"
+                    AND ml.marks IS NOT NULL
+                    AND ml.marks != ""
+                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) DESC
+                    LIMIT 1
+                ) AS highest_thana')
+            )
+            ->where('m.recommend_institute', '!=', 'N/A')
+            ->whereNotNull('m.institute_district')
+            ->where('m.institute_district', '!=', '')
+            ->whereNotNull('m.marks')
+            ->where('m.marks', '!=', '')
+            ->groupBy('m.institute_district')
+            ->orderBy(DB::raw('MIN(CAST(m.marks AS DECIMAL(5,2)))'), 'asc')
+            ->paginate(20); // 🔑 required for Blade pagination
+         return response()->json($listOfData);
+        
+    }
+
 }

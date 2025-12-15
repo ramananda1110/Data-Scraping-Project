@@ -73,3 +73,4 @@ Route::get('/update-recommended-institutes', [MeritListController::class, 'updat
 Route::get('/all-merit/merit-position-pdf', [MeritListController::class, 'exportingPdfSelectCandidate'])->name('merit.exportPdf');
 
 Route::get('/district-wise-marks', [MeritListController::class, 'recommendedDistrictLecturer'])->name('district-wise.marks');
+Route::get('/district-raw-data-list-marks', [MeritListController::class, 'recommendedRawDistrictLecturer'])->name('district-wise.raw');
