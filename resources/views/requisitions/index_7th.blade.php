@@ -121,7 +121,7 @@
                     <a href="{{ route('requisitions.index_7th') }}" class="btn btn-secondary me-2">Reset</a>
 
                     {{-- Export PDF form --}}
-                    <form action="{{ route('vacancy.exportPdf_7th') }}" method="GET" class="d-inline">
+                    <form action="{{ route('vacancy.exportPdf7th') }}" method="GET" class="d-inline">
                         <input type="hidden" name="subject" value="{{ request('subject') }}">
                         <input type="hidden" name="post_name" value="{{ request('post_name') }}">
                         <input type="hidden" name="district" value="{{ request('district') }}">

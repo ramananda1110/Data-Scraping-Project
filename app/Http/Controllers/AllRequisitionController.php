@@ -253,7 +253,9 @@ class AllRequisitionController extends Controller
         if ($request->filled('apply_for')) {
             $query->where('apply_for', $request->apply_for);
         }
-
+        if ($request->filled('name_of_institute')) {
+            $query->where('name_of_institute', 'LIKE', '%' . $request->name_of_institute . '%');
+        }
         if ($request->filled('institute_type')) {
             if ($request->institute_type === 'madrasha') {
                 $query->where(function ($q) {
@@ -312,6 +314,7 @@ class AllRequisitionController extends Controller
                 <thead>
                     <tr>
                         <th>Serial</th>
+                        <th>Etin</th>
                         <th>Institute Name</th>
                         <th>Subject</th>
                         <th>Post For</th>
@@ -325,6 +328,7 @@ class AllRequisitionController extends Controller
         foreach ($vacants as $vacancy) {
             $html .= '<tr>';
             $html .= '<td>' . $serial++ . '</td>';
+            $html .= '<td>' . $vacancy->etin_id . '</td>';
             $html .= '<td>' . $vacancy->name_of_institute . '</td>';
             $html .= '<td>' . $vacancy->subject . '</td>';
             $html .= '<td>' . $vacancy->post_name . '</td>';

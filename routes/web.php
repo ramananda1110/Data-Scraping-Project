@@ -58,6 +58,7 @@ Route::get('all-vacancy/download-pdf', [AllRequisitionController::class, 'export
 Route::get('all-vacancy/download-csv', [RequisitionNewController::class, 'exportingCsvVacancy'])->name('vacancy.exportCsv');
 Route::get('all-vacancy-7th/download-pdf', [RequisitionNewController::class, 'exportingPdfVecancy'])->name('vacancy.exportPdf_7th');
 
+// Route::get('all-vacancy-7th/download-pdf', [RequisitionNewController::class, 'exportingPdfVecancy'])->name('vacancy.exportPdf7th');
 
 Route::get('/demonstrator-checking-data', [DataScrapingController::class, 'data_scrapingBotany']);
 

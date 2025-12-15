@@ -67,11 +67,19 @@ class MeritListController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('roll', 'like', "%{$search}%")
                 ->orWhere('applicant_name', 'like', "%{$search}%")
-                ->orWhere('recommend_institute', 'like', "%{$search}%");
+                ->orWhere('recommend_institute', 'like', "%{$search}%")
+                ->orWhere('marks', 'like', "%{$search}%")
+                ->orWhere('institute_district', 'like', "%{$search}%");
+            });
+        }
+        if ($request->filled('marks')) {
+            $search = $request->marks;
+            $query->where(function ($q) use ($search) {
+                $q->where('marks', 'like', "%{$search}%");
             });
         }
 
-          if ($request->filled('institute_type')) {
+        if ($request->filled('institute_type')) {
             if ($request->institute_type === 'general') {
                 $query->where(function ($q) {
                     $q->where('institute_type', 'LIKE', '%general%');
@@ -148,10 +156,28 @@ class MeritListController extends Controller
         ini_set('memory_limit', '1024M');
         ini_set('max_execution_time', 600);
 
-        
+    
         $query = MeritList::query();
 
-       
+
+       $search = trim($request->input('search'));
+
+        if (!empty($search)) {
+            $query->where(function ($q) use ($search) {
+                $q->where('roll', 'like', "%{$search}%")
+                ->orWhere('applicant_name', 'like', "%{$search}%")
+                ->orWhere('recommend_institute', 'like', "%{$search}%")
+                ->orWhere('institute_district', 'like', "%{$search}%");
+            });
+        }
+
+
+         if ($request->filled('marks')) {
+            $search = $request->marks;
+            $query->where(function ($q) use ($search) {
+                $q->where('marks', 'like', "%{$search}%");
+            });
+        }
 
         if ($request->filled('institute_type')) {
             if ($request->institute_type === 'general') {
@@ -190,7 +216,9 @@ class MeritListController extends Controller
                         <th>Marks</th>
                         <th>Applicant Name</th>
                         <th>Type</th>
-                        <th>Recommended Institute</th>	
+                        <th>Institute</th>	
+                        <th>District</th>	
+                        <th>Thana</th>	
                     </tr>
                 </thead>
                 <tbody>';
@@ -203,6 +231,8 @@ class MeritListController extends Controller
             $html .= '<td>' . $data->applicant_name . '</td>';
             $html .= '<td>' . $data->institute_type . '</td>';
             $html .= '<td>' . $data->recommend_institute . '</td>';
+            $html .= '<td>' . $data->institute_district . '</td>';
+            $html .= '<td>' . $data->institute_thana . '</td>';
             $html .= '</tr>';
         }
 

@@ -19,6 +19,11 @@
                     <input type="text" name="subject" id="subject" class="form-control" placeholder="Subject" value="{{ request('subject') }}">
                 </div>
                 <div class="col-md-3">
+                    <label for="subject" class="form-label">Institute Name</label>
+                    <input type="text" name="name_of_institute" id="subject" class="form-control" placeholder="Type institute" value="{{ request('name_of_institute') }}">
+                </div>
+
+                <div class="col-md-3">
                     <label for="post_name" class="form-label">Post Name</label>
                     <input type="text" name="post_name" id="post_name" class="form-control" placeholder="Post Name" value="{{ request('post_name') }}">
                 </div>
