@@ -327,7 +327,7 @@ class RequisitionNewController extends Controller
         <body>
             <h2 class="fw-bold text-primary">NTRCA 7th Public Notice Vacancy List:</h2>
            
-            <div class="watermark">Dev by- Ramananda Sarkar- 01738039685s</div>
+            <div class="watermark">Dev by- Ramananda Sarkar- 01738039685</div>
             <table>
                 <thead>
                     <tr>
