@@ -244,14 +244,25 @@ class RequisitionNewController extends Controller
             $query->where('subject', 'LIKE', '%' . $request->subject . '%');
         }
         if ($request->filled('post_name')) {
-            $query->where('post_name', 'LIKE', '%' . $request->post_name . '%');
-        }
+
+            $query->where(function ($q) use ($request) {
+
+                // Always include Instructor (Non Tech) silently
+                $q->where('post_name', 'LIKE', '%Instructor (Non Tech)%');
+
+                // Also include selected post_name
+                $q->orWhere('post_name', 'LIKE', '%' . $request->post_name . '%');
+            });
+
+        } 
         if ($request->filled('district')) {
             $query->where('district', 'LIKE', '%' . $request->district . '%');
         }
         if ($request->filled('apply_for')) {
             $query->where('apply_for', $request->apply_for);
         }
+
+        $query->where('post_name', 'LIKE', '%'.`Instructor (Non Tech)`. '%');
 
         if ($request->filled('institute_type')) {
             if ($request->institute_type === 'madrasha') {

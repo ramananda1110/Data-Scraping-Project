@@ -74,3 +74,5 @@ Route::get('/all-merit/merit-position-pdf', [MeritListController::class, 'export
 
 Route::get('/district-wise-marks', [MeritListController::class, 'recommendedDistrictLecturer'])->name('district-wise.marks');
 Route::get('/district-raw-data-list-marks', [MeritListController::class, 'recommendedRawDistrictLecturer'])->name('district-wise.raw');
+
+Route::get('/not-recommended-count', [MeritListController::class, 'naRecommendedMarksCountPivot'])->name('na-recommendation.raw');

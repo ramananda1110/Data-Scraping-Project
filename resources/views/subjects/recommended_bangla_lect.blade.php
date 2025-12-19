@@ -36,7 +36,7 @@
              
             <div class="col-md-3">
                   <label for="subject" class="form-label">Filter By Marks</label>
-                  <input type="text" name="marks" class="form-control" placeholder="Type marks" value="{{ request('search') }}">
+                  <input type="text" name="marks" class="form-control" placeholder="Type marks" value="{{ request('marks') }}">
              </div>
 
             <div class="col-md-2">

@@ -32,33 +32,30 @@
     <!-- Table -->
     <table class="table table-bordered table-striped align-middle">
         <thead class="table-dark text-center">
-            <tr>
-                <th>SL</th>
-                <th colspan="3">Lowest Marks</th>
-                <th colspan="3">Highest Marks</th>
-            </tr>
+            
             <tr class="table-secondary text-center">
-                <th></th>
-                <th>Institute</th>
-                <th>District - Thana</th>
-                <th>Marks</th>
-                <th>Institute</th>
-                <th>District - Thana</th>
-                <th>Marks</th>
+                <th>SL</th>
+                <th>District</th>
+                <th>Recommended Marks</th>
+                <th>Lowest-Institute</th>
+                <th>Heighest-Institute</th>
             </tr>
         </thead>
         <tbody>
             @forelse($listOfData as $index => $row)
                 <tr>
                     <td class="text-center">{{ $listOfData->firstItem() + $index }}</td>
+                    <td>{{ $row->institute_district }}</td>
+                    <td>
+                        <small class="text-muted">
+                            {{ $row->recommended_marks }}
+                        </small>
+                    </td>
 
-                    <td>{{ $row->lowest_institute }}</td>
-                    <td>{{ $row->institute_district }} - {{ $row->lowest_thana }}</td>
-                    <td class="text-center"><span class="highlight">{{ number_format($row->lowest_marks, 2) }}</span></td>
-
-                    <td>{{ $row->highest_institute }}</td>
-                    <td>{{ $row->institute_district }} - {{ $row->highest_thana }}</td>
-                    <td class="text-center"><span class="highlight">{{ number_format($row->highest_marks, 2) }}</span></td>
+                    <td>{{ $row->lowest_institute }}:<span class="highlight">{{ number_format($row->lowest_marks)}}</span> - {{ $row->lowest_thana }}</td>
+                   
+                    <td>{{ $row->highest_institute }}:<span class="highlight">{{ number_format($row->highest_marks) }}</span>- {{ $row->highest_thana }}</td>
+                   
                 </tr>
             @empty
                 <tr>

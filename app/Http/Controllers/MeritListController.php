@@ -254,20 +254,18 @@ class MeritListController extends Controller
 
     public function recommendedDistrictLecturer()
     {
-        // Base query (for table & chart)
         $query = DB::table('merit_lists_bangla as m')
             ->select(
                 'm.institute_district',
-                DB::raw('MIN(CAST(m.marks AS DECIMAL(5,2))) AS lowest_marks'),
-                DB::raw('MAX(CAST(m.marks AS DECIMAL(5,2))) AS highest_marks'),
+
+                // Lowest
+                DB::raw('MIN(CAST(m.marks AS UNSIGNED)) AS lowest_marks'),
                 DB::raw('(
                     SELECT ml.recommend_institute
                     FROM merit_lists_bangla ml
                     WHERE ml.institute_district = m.institute_district
                     AND ml.recommend_institute != "N/A"
-                    AND ml.marks IS NOT NULL
-                    AND ml.marks != ""
-                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) ASC
+                    ORDER BY CAST(ml.marks AS UNSIGNED) ASC
                     LIMIT 1
                 ) AS lowest_institute'),
                 DB::raw('(
@@ -275,19 +273,18 @@ class MeritListController extends Controller
                     FROM merit_lists_bangla ml
                     WHERE ml.institute_district = m.institute_district
                     AND ml.recommend_institute != "N/A"
-                    AND ml.marks IS NOT NULL
-                    AND ml.marks != ""
-                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) ASC
+                    ORDER BY CAST(ml.marks AS UNSIGNED) ASC
                     LIMIT 1
                 ) AS lowest_thana'),
+
+                // Highest
+                DB::raw('MAX(CAST(m.marks AS UNSIGNED)) AS highest_marks'),
                 DB::raw('(
                     SELECT ml.recommend_institute
                     FROM merit_lists_bangla ml
                     WHERE ml.institute_district = m.institute_district
                     AND ml.recommend_institute != "N/A"
-                    AND ml.marks IS NOT NULL
-                    AND ml.marks != ""
-                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) DESC
+                    ORDER BY CAST(ml.marks AS UNSIGNED) DESC
                     LIMIT 1
                 ) AS highest_institute'),
                 DB::raw('(
@@ -295,11 +292,16 @@ class MeritListController extends Controller
                     FROM merit_lists_bangla ml
                     WHERE ml.institute_district = m.institute_district
                     AND ml.recommend_institute != "N/A"
-                    AND ml.marks IS NOT NULL
-                    AND ml.marks != ""
-                    ORDER BY CAST(ml.marks AS DECIMAL(5,2)) DESC
+                    ORDER BY CAST(ml.marks AS UNSIGNED) DESC
                     LIMIT 1
-                ) AS highest_thana')
+                ) AS highest_thana'),
+
+                // ✅ ALL recommended marks (duplicates preserved, no .00)
+                DB::raw('GROUP_CONCAT(
+                    CAST(m.marks AS UNSIGNED)
+                    ORDER BY CAST(m.marks AS UNSIGNED) ASC
+                    SEPARATOR ", "
+                ) AS recommended_marks')
             )
             ->where('m.recommend_institute', '!=', 'N/A')
             ->whereNotNull('m.institute_district')
@@ -307,16 +309,15 @@ class MeritListController extends Controller
             ->whereNotNull('m.marks')
             ->where('m.marks', '!=', '')
             ->groupBy('m.institute_district')
-            ->orderBy(DB::raw('MIN(CAST(m.marks AS DECIMAL(5,2)))'), 'asc');
+            ->orderBy(DB::raw('MIN(CAST(m.marks AS UNSIGNED))'), 'asc');
 
-        // Table data with pagination
         $listOfData = $query->paginate(20);
-
-        // Chart data (no pagination)
-        $chartData = $query->get();
+        $chartData  = $query->get();
 
         return view('subjects.recommended_district_lecturer', compact('listOfData', 'chartData'));
     }
+
+
 
 
 
@@ -383,5 +384,40 @@ class MeritListController extends Controller
          return response()->json($listOfData);
         
     }
+
+
+    public function naRecommendedMarksCountPivot()
+    {
+        $data = DB::table('merit_lists_bangla')
+            ->select(
+                DB::raw('CAST(marks AS UNSIGNED) AS marks'),
+
+                // bm count
+                DB::raw('SUM(CASE WHEN institute_type = "bm" THEN 1 ELSE 0 END) AS bm_count'),
+
+                // general count
+                DB::raw('SUM(CASE WHEN institute_type = "general" THEN 1 ELSE 0 END) AS general_count')
+            )
+            ->where('recommend_institute', 'N/A')
+            ->whereIn('institute_type', ['bm', 'general'])
+            ->whereNotNull('marks')
+            ->where('marks', '!=', '')
+            ->groupBy(DB::raw('CAST(marks AS UNSIGNED)'))
+            ->orderBy(DB::raw('CAST(marks AS UNSIGNED)'), 'asc')
+            ->get()
+            ->map(function ($row) {
+                return [
+                    'marks' => (int) $row->marks,
+                    'total number' => (int)$row->bm_count + (int)$row->general_count,
+                    'bm_count' => (int) $row->bm_count,
+                   
+                    'general_count' => (int) $row->general_count,
+                ];
+            });
+
+        return response()->json($data);
+    }
+
+
 
 }

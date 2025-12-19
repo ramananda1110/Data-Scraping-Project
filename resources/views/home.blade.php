@@ -67,6 +67,7 @@
             <a href="{{ route('subjects.bangla') }}" class="btn btn-danger btn-custom">📘 Bangla Candidates</a>
 
             <a href="{{ route('recommended.index') }}" class="btn btn-success btn-custom">📘 Recommended Result  Bangla Lecturer</a>
+            <a href="{{ route('district-wise.marks') }}" class="btn btn-danger btn-custom">📘 জেলা ভিত্তিক সুপারিশের  মার্ক তালিকা  </a>
 
         </div>
     </div>

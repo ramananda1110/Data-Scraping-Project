@@ -81,7 +81,7 @@
                     <option value="BHOLA" {{ request('district') == 'BHOLA' ? 'selected' : '' }}>BHOLA</option>
                     <option value="FENI" {{ request('district') == 'FENI' ? 'selected' : '' }}>FENI</option>
                     <option value="CHITTAGONG" {{ request('district') == 'CHITTAGONG' ? 'selected' : '' }}>CHITTAGONG</option>
-                    <option value="COX'S BAZAR" {{ request('district') == "COX'S BAZAR" ? 'selected' : '' }}>COX'S BAZAR</option>
+                    <option value="COX`S BAZAR" {{ request('district') == "COX`S BAZAR" ? 'selected' : '' }}>COX`S BAZAR</option>
                     <option value="KHAGRACHHARI" {{ request('district') == 'KHAGRACHHARI' ? 'selected' : '' }}>KHAGRACHHARI</option>
                     <option value="RANGAMATI" {{ request('district') == 'RANGAMATI' ? 'selected' : '' }}>RANGAMATI</option>
                     <option value="BANDARBAN" {{ request('district') == 'BANDARBAN' ? 'selected' : '' }}>BANDARBAN</option>
