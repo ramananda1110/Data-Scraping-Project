@@ -260,48 +260,68 @@ class MeritListController extends Controller
 
                 // Lowest
                 DB::raw('MIN(CAST(m.marks AS UNSIGNED)) AS lowest_marks'),
-                DB::raw('(
-                    SELECT ml.recommend_institute
-                    FROM merit_lists_bangla ml
-                    WHERE ml.institute_district = m.institute_district
-                    AND ml.recommend_institute != "N/A"
-                    ORDER BY CAST(ml.marks AS UNSIGNED) ASC
-                    LIMIT 1
-                ) AS lowest_institute'),
-                DB::raw('(
-                    SELECT ml.institute_thana
-                    FROM merit_lists_bangla ml
-                    WHERE ml.institute_district = m.institute_district
-                    AND ml.recommend_institute != "N/A"
-                    ORDER BY CAST(ml.marks AS UNSIGNED) ASC
-                    LIMIT 1
-                ) AS lowest_thana'),
+                // DB::raw('(
+                //     SELECT ml.recommend_institute
+                //     FROM merit_lists_bangla ml
+                //     WHERE ml.institute_district = m.institute_district
+                //     AND ml.recommend_institute != "N/A"
+                //     ORDER BY CAST(ml.marks AS UNSIGNED) ASC
+                //     LIMIT 1
+                // ) AS lowest_institute'),
+                // DB::raw('(
+                //     SELECT ml.institute_thana
+                //     FROM merit_lists_bangla ml
+                //     WHERE ml.institute_district = m.institute_district
+                //     AND ml.recommend_institute != "N/A"
+                //     ORDER BY CAST(ml.marks AS UNSIGNED) ASC
+                //     LIMIT 1
+                // ) AS lowest_thana'),
 
                 // Highest
                 DB::raw('MAX(CAST(m.marks AS UNSIGNED)) AS highest_marks'),
-                DB::raw('(
-                    SELECT ml.recommend_institute
-                    FROM merit_lists_bangla ml
-                    WHERE ml.institute_district = m.institute_district
-                    AND ml.recommend_institute != "N/A"
-                    ORDER BY CAST(ml.marks AS UNSIGNED) DESC
-                    LIMIT 1
-                ) AS highest_institute'),
-                DB::raw('(
-                    SELECT ml.institute_thana
-                    FROM merit_lists_bangla ml
-                    WHERE ml.institute_district = m.institute_district
-                    AND ml.recommend_institute != "N/A"
-                    ORDER BY CAST(ml.marks AS UNSIGNED) DESC
-                    LIMIT 1
-                ) AS highest_thana'),
+                // DB::raw('(
+                //     SELECT ml.recommend_institute
+                //     FROM merit_lists_bangla ml
+                //     WHERE ml.institute_district = m.institute_district
+                //     AND ml.recommend_institute != "N/A"
+                //     ORDER BY CAST(ml.marks AS UNSIGNED) DESC
+                //     LIMIT 1
+                // ) AS highest_institute'),
+                // DB::raw('(
+                //     SELECT ml.institute_thana
+                //     FROM merit_lists_bangla ml
+                //     WHERE ml.institute_district = m.institute_district
+                //     AND ml.recommend_institute != "N/A"
+                //     ORDER BY CAST(ml.marks AS UNSIGNED) DESC
+                //     LIMIT 1
+                // ) AS highest_thana'),
 
                 // ✅ ALL recommended marks (duplicates preserved, no .00)
                 DB::raw('GROUP_CONCAT(
                     CAST(m.marks AS UNSIGNED)
                     ORDER BY CAST(m.marks AS UNSIGNED) ASC
                     SEPARATOR ", "
-                ) AS recommended_marks')
+                ) AS recommended_marks'),
+
+                DB::raw('GROUP_CONCAT(
+                    CAST(m.id AS UNSIGNED)
+                    ORDER BY CAST(m.marks AS UNSIGNED) ASC
+                    SEPARATOR ", "
+                ) AS recommended_ranks'),
+                 
+                DB::raw('GROUP_CONCAT(
+                    m.recommend_institute
+                    ORDER BY m.marks ASC
+                    SEPARATOR ", "
+                ) AS recommended_institutes'),
+                
+                DB::raw('GROUP_CONCAT(
+                    m.institute_thana
+                    ORDER BY m.marks ASC
+                    SEPARATOR ", "
+                ) AS recommended_thana')
+
+
             )
             ->where('m.recommend_institute', '!=', 'N/A')
             ->whereNotNull('m.institute_district')
@@ -313,6 +333,8 @@ class MeritListController extends Controller
 
         $listOfData = $query->paginate(20);
         $chartData  = $query->get();
+
+       //return response()->json($listOfData);
 
         return view('subjects.recommended_district_lecturer', compact('listOfData', 'chartData'));
     }

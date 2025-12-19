@@ -36,9 +36,10 @@
             <tr class="table-secondary text-center">
                 <th>SL</th>
                 <th>District</th>
-                <th>Recommended Marks</th>
-                <th>Lowest-Institute</th>
-                <th>Heighest-Institute</th>
+                <th>Marks</th>
+                <th>Ranks of 18th</th>
+                <th>Insititute</th>
+                <th>Thana</th>
             </tr>
         </thead>
         <tbody>
@@ -51,11 +52,37 @@
                             {{ $row->recommended_marks }}
                         </small>
                     </td>
+                    <td>
+                        <div class="badge-wrap">
+                            @foreach(explode(',', $row->recommended_ranks) as $rank)
+                                <span class="badge bg-success">
+                                    {{ trim($rank) }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </td>
 
-                    <td>{{ $row->lowest_institute }}:<span class="highlight">{{ number_format($row->lowest_marks)}}</span> - {{ $row->lowest_thana }}</td>
-                   
-                    <td>{{ $row->highest_institute }}:<span class="highlight">{{ number_format($row->highest_marks) }}</span>- {{ $row->highest_thana }}</td>
-                   
+                    
+                    <td>
+                        <div class="badge-wrap">
+                            @foreach(explode(',', $row->recommended_institutes) as $inst)
+                                <span class="badge bg-primary text-wrap">
+                                    {{ trim($inst) }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="badge-wrap">
+                            @foreach(explode(',', $row->recommended_thana) as $thana)
+                                <span class="badge bg-secondary text-wrap">
+                                    {{ trim($thana) }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </td>
+
                 </tr>
             @empty
                 <tr>
