@@ -442,4 +442,34 @@ class MeritListController extends Controller
 
 
 
+    
+
+    public function getRemainingMeritByDistrict()
+    {
+        $data = DB::table('merit_lists_bangla')
+            ->select(
+                'district',
+                DB::raw("GROUP_CONCAT(id ORDER BY id ASC SEPARATOR ',') as ids"),
+                DB::raw("GROUP_CONCAT(marks ORDER BY marks DESC SEPARATOR ',') as remaining_marks"),
+                DB::raw("COUNT(*) as total")
+            )
+            ->where('recommend_institute', 'N/A')
+            ->groupBy('district')
+            ->get();
+
+        $result = [];
+
+        foreach ($data as $row) {
+            $result[strtolower($row->district)] = [
+                'remaining_merit_marks' => $row->remaining_marks,
+                'ranks'             => $row->ids,
+                'total'           => $row->total,
+            ];
+        }
+
+        return response()->json($result);
+    }
+
+
+
 }

@@ -35,7 +35,7 @@ Route::get('/all-requisitions-7th', [RequisitionNewController::class, 'getAllRec
 Route::get('/fetch-all-requisitions-7th', [RequisitionNewController::class, 'fetchAndStoreData7th']);
 
 
-Route::get('/all-requisitions-info', [AllRequisitionController::class, 'getAllInfo'])->name('requisitions.district');
+Route::get('/all-requisitions-info', [RequisitionNewController::class, 'getAllInfoBangla'])->name('requisitions.district');
 
 Route::get('/requisitions', [AllRequisitionController::class, 'index'])->name('requisitions.index');
 Route::get('/requisitions-7th', [RequisitionNewController::class, 'index'])->name('requisitions.index_7th');
@@ -76,3 +76,5 @@ Route::get('/district-wise-marks', [MeritListController::class, 'recommendedDist
 Route::get('/district-raw-data-list-marks', [MeritListController::class, 'recommendedRawDistrictLecturer'])->name('district-wise.raw');
 
 Route::get('/not-recommended-count', [MeritListController::class, 'naRecommendedMarksCountPivot'])->name('na-recommendation.raw');
+
+Route::get('/remining-merit-marks', [MeritListController::class, 'getRemainingMeritByDistrict'])->name('remaining-merit.raw');

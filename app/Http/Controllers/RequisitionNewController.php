@@ -422,4 +422,139 @@ class RequisitionNewController extends Controller
     }
 
 
+    public function getAllInfoBangla()
+    {
+        $divisionCase = "
+        CASE
+            WHEN district IN ('Rangpur','Dinajpur','Kurigram','Gaibandha','Lalmonirhat','Nilphamari','Thakurgaon','Panchagarh') THEN 'Rangpur'
+            WHEN district IN ('Rajshahi','Bogra','Naogaon','Natore','Chapai nawabganj','Joypurhat','Pabna','Sirajganj') THEN 'Rajshahi'
+            WHEN district IN ('Barisal','Bhola','Patuakhali','Pirojpur','Barguna','Jhalokathi') THEN 'Barisal'
+
+            WHEN district IN ('Khulna','Jessore','Satkhira','Bagerhat','Narail','Jhenaidah','Magura','Kushtia','Chuadanga', 'Meherpur') THEN 'Khulna'
+           
+            WHEN district IN ('Mymensingh','Jamalpur','Netrokona','Sherpur') THEN 'Mymensingh'
+            WHEN district IN ('Sylhet','Moulvibazar','Habiganj','Sunamganj') THEN 'Sylhet'
+           
+            WHEN district IN ('Chittagong','Cox`s Bazar','Bandarban','Rangamati','Khagrachhari','Feni','Noakhali','Lakshmipur','Chandpur', 'Comilla', 'Brahmanbaria') THEN 'Chittagong'
+           
+
+
+            WHEN district IN ('Dhaka','Gazipur','Narayanganj','Narsingdi','Munshiganj','Manikganj','Tangail','Faridpur','Gopalganj','Madaripur','Rajbari','Shariatpur','Kishoreganj') THEN 'Dhaka'
+            ELSE 'Other'
+        END
+        ";
+
+        
+    // ---------------- DISTRICT + DIVISION ----------------
+    $rows = RequisitionNew::whereIn('post_name', ['Lecturer','Instructor (Non Tech)'])
+        ->where('subject','Bengali')
+        ->selectRaw("
+            district,
+            $divisionCase as division,
+            COUNT(*) as total_count,
+
+            SUM(
+                CASE
+                    WHEN post_name = 'Instructor (Non Tech)'
+                      OR name_of_institute LIKE '%TECHNICAL%'
+                      OR name_of_institute LIKE '%BUSINESS%'
+                    THEN 1 ELSE 0
+                END
+            ) as technical_count,
+
+            SUM(
+                CASE
+                    WHEN post_name != 'Instructor (Non Tech)'
+                     AND name_of_institute NOT LIKE '%TECHNICAL%'
+                     AND name_of_institute NOT LIKE '%BUSINESS%'
+                     AND (
+                          name_of_institute LIKE '%MADRASHA%' OR
+                          name_of_institute LIKE '%MADRASA%' OR
+                          name_of_institute LIKE '%MADRASAH%' OR
+                          name_of_institute LIKE '%MADRASH%' OR
+                          name_of_institute LIKE '%MADRSHA%' OR
+                          name_of_institute LIKE '%MADRSASHA%'
+                     )
+                    THEN 1 ELSE 0
+                END
+            ) as madrasa_count
+        ")
+        ->groupBy('division','district')
+        ->orderBy('division')
+        ->orderBy('district')
+        ->get();
+
+    $data = [];
+
+    foreach ($rows as $r) {
+        $general = $r->total_count - $r->technical_count - $r->madrasa_count;
+
+        $data[$r->division]['rows'][] = [
+            'district'  => $r->district,
+            'general'   => $general,
+            'madrasa'   => $r->madrasa_count,
+            'technical' => $r->technical_count,
+            'sub_total' => $r->total_count
+        ];
+
+        $data[$r->division]['total'] =
+            ($data[$r->division]['total'] ?? 0) + $r->total_count;
+    }
+
+    // ---------------- DIVISION SUMMARY ----------------
+    foreach ($data as $division => &$info) {
+        $info['general'] = 0;
+        $info['madrasa'] = 0;
+        $info['technical'] = 0;
+
+        foreach ($info['rows'] as $r) {
+            $info['general']   += $r['general'];
+            $info['madrasa']   += $r['madrasa'];
+            $info['technical'] += $r['technical'];
+        }
+        $info['vacant'] = $info['general'] + $info['madrasa'] + $info['technical'];
+
+    }
+
+    // ---------------- COUNTRY TOTAL ----------------
+    $ct = RequisitionNew::whereIn('post_name', ['Lecturer','Instructor (Non Tech)'])
+        ->where('subject','Bengali')
+        ->selectRaw("
+            COUNT(*) as total,
+            SUM(
+                CASE
+                    WHEN post_name = 'Instructor (Non Tech)'
+                      OR name_of_institute LIKE '%TECHNICAL%'
+                      OR name_of_institute LIKE '%BUSINESS%'
+                    THEN 1 ELSE 0
+                END
+            ) as technical,
+            SUM(
+                CASE
+                    WHEN post_name != 'Instructor (Non Tech)'
+                     AND name_of_institute NOT LIKE '%TECHNICAL%'
+                     AND name_of_institute NOT LIKE '%BUSINESS%'
+                     AND (
+                          name_of_institute LIKE '%MADRASHA%' OR
+                          name_of_institute LIKE '%MADRASA%' OR
+                          name_of_institute LIKE '%MADRASAH%' OR
+                          name_of_institute LIKE '%MADRASH%' OR
+                          name_of_institute LIKE '%MADRSHA%' OR
+                          name_of_institute LIKE '%MADRSASHA%'
+                     )
+                    THEN 1 ELSE 0
+                END
+            ) as madrasa
+        ")
+        ->first();
+
+    $country = [
+        'total'     => $ct->total,
+        'technical' => $ct->technical,
+        'madrasa'   => $ct->madrasa,
+        'general'   => $ct->total - $ct->technical - $ct->madrasa
+    ];
+
+    return view('requisitions.all_info', compact('data','country'));
+    }
 }
