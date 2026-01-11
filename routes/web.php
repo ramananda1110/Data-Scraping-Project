@@ -9,6 +9,7 @@ use App\Http\Controllers\RequisitionController;
 use App\Http\Controllers\AllRequisitionController;
 use App\Http\Controllers\RequisitionNewController;
 use App\Http\Controllers\SubjectController;
+use App\Http\Controllers\InstitutePostController;
 
 use App\Http\Controllers\MeritListController;
 
@@ -78,3 +79,5 @@ Route::get('/district-raw-data-list-marks', [MeritListController::class, 'recomm
 Route::get('/not-recommended-count', [MeritListController::class, 'naRecommendedMarksCountPivot'])->name('na-recommendation.raw');
 
 Route::get('/remining-merit-marks', [MeritListController::class, 'getRemainingMeritByDistrict'])->name('remaining-merit.raw');
+
+Route::get('/requisitions-bangla-7th', [InstitutePostController::class, 'index'])->name('requisitions.bangla');
