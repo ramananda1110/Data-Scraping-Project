@@ -65,7 +65,7 @@
 
             <a href="{{ route('requisitions.index_7th') }}" class="btn btn-success btn-custom">📌 ৭ম গণবিজ্ঞপ্তির শূন্যপদের তালিকা</a>
             <a href="{{ route('requisitions.index') }}" class="btn btn-success btn-custom">📌 ৬ষ্ঠ গণবিজ্ঞপ্তির শূন্যপদের তালিকা</a>
-            <a href="{{ route('requisitions.district') }}" class="btn btn-primary btn-custom">📍 District Wise Vacancy For Bangla</a>
+            <a href="{{ route('requisitions.district') }}" class="btn btn-primary btn-custom">📍 বাংলা প্রভাষক ৭ম গণবিজ্ঞপ্তি জেলাভিত্তিক পদের তালিকা: </a>
             <a href="{{ route('subjects.bangla') }}" class="btn btn-danger btn-custom">📘 Bangla Candidates</a>
 
             <a href="{{ route('recommended.index') }}" class="btn btn-success btn-custom">📘 Recommended Result  Bangla Lecturer</a>

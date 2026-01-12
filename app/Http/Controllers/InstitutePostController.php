@@ -147,4 +147,18 @@ class InstitutePostController extends Controller
     }
 
 
+    public function vacanciesByDistrict(Request $request)
+    {
+        $requisitions = InstitutePost::where('district', $request->district)
+            ->whereIn('post_name', ['Lecturer','Instructor (Non Tech)'])
+            ->orderBy('institute_name')
+            ->get();
+
+        return view('requisitions.vacant_table', compact('requisitions'));
+    }
+
+
 }
+
+
+

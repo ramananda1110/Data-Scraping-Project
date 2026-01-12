@@ -81,3 +81,6 @@ Route::get('/not-recommended-count', [MeritListController::class, 'naRecommended
 Route::get('/remining-merit-marks', [MeritListController::class, 'getRemainingMeritByDistrict'])->name('remaining-merit.raw');
 
 Route::get('/requisitions-bangla-7th', [InstitutePostController::class, 'index'])->name('requisitions.bangla');
+
+
+Route::get('/vacancies-by-district', [InstitutePostController::class, 'vacanciesByDistrict']);

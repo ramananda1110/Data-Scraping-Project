@@ -186,6 +186,14 @@ tbody tr:hover{
                             <span class="badge badge-gen">Gen {{ $info['general'] }}</span>
                             <span class="badge badge-mad">Mad {{ $info['madrasa'] }}</span>
                             <span class="badge badge-tech">Tech {{ $info['technical'] }}</span>
+                           <button 
+                                class="badge badge-tech border-0"
+                                style="cursor:pointer"
+                                onclick="openVacantModal('{{ $row['district'] }}')">
+                                View Vacant
+                            </button>
+
+                            
                         </div>
                     </td>
 
@@ -211,8 +219,56 @@ tbody tr:hover{
         @endforeach
         </tbody>
     </table>
+    <!-- Vacant Modal -->
+    <div class="modal fade" id="vacantModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Vacant List – <span id="modalDistrict"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body" id="vacantModalBody">
+                    <div class="text-center text-muted">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     </div>
 </div>
 
+
+
+
+
 </body>
 </html>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function openVacantModal(district) {
+
+    document.getElementById('modalDistrict').innerText = district;
+    document.getElementById('vacantModalBody').innerHTML =
+        '<div class="text-center text-muted">Loading...</div>';
+
+    let modal = new bootstrap.Modal(document.getElementById('vacantModal'));
+    modal.show();
+
+    fetch(`/vacancies-by-district?district=${district}`)
+        .then(res => res.text())
+        .then(html => {
+            document.getElementById('vacantModalBody').innerHTML = html;
+        })
+        .catch(() => {
+            document.getElementById('vacantModalBody').innerHTML =
+                '<div class="text-danger text-center">Failed to load data.</div>';
+        });
+}
+</script>
