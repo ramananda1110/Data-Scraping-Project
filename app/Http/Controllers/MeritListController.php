@@ -451,7 +451,7 @@ class MeritListController extends Controller
                 'district',
                 DB::raw("GROUP_CONCAT(id ORDER BY id ASC SEPARATOR ',') as ids"),
                 DB::raw("GROUP_CONCAT(marks ORDER BY marks DESC SEPARATOR ',') as remaining_marks"),
-                DB::raw("COUNT(*) as total")
+               // DB::raw("COUNT(*) as total")
             )
             ->where('recommend_institute', 'N/A')
             ->groupBy('district')
@@ -463,7 +463,7 @@ class MeritListController extends Controller
             $result[strtolower($row->district)] = [
                 'remaining_merit_marks' => $row->remaining_marks,
                 'ranks'             => $row->ids,
-                'total'           => $row->total,
+                //'total'           => $row->total,
             ];
         }
 

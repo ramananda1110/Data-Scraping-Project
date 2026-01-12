@@ -156,6 +156,7 @@ tbody tr:hover{
                 <th>Technical</th>
                 <th>Sub Total</th>
                 <th>Total</th>
+                <th>Remaining- (Marks & Ranks)</th>
             </tr>
         </thead>
 
@@ -189,6 +190,21 @@ tbody tr:hover{
                     </td>
 
                 @endif
+               <td>
+                    @if(!empty($row['remaining_merit_marks']))
+                        <span class="badge badge-gen">
+                            Marks: {{ $row['remaining_merit_marks'] }}
+                        </span>
+                    @endif
+
+                    @if(!empty($row['ranks']))
+                        <span class="badge badge-tech ms-1">
+                            Ranks: {{ $row['ranks'] }}
+                        </span>
+                    @endif
+                </td>
+
+               
             </tr>
             @php $first = false; @endphp
             @endforeach
