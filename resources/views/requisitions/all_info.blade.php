@@ -105,6 +105,10 @@ tbody tr:hover{
     th:nth-child(6),
     th:nth-child(7){ width:14%; }
 }
+.mark-values{
+    font-size:12px;        /* smaller than badge */
+    line-height:1.35;
+}
 
 
 </style>
@@ -157,7 +161,7 @@ tbody tr:hover{
                 <th>Details</th>
                 <th>Remaining- (Marks & Ranks)</th>
                 <th>recommended- (Marks & Ranks)</th>
-                <th>View</th>
+                <th>View Deatils</th>
             </tr>
         </thead>
 
@@ -202,33 +206,99 @@ tbody tr:hover{
                     </td>
 
                 @endif
-               <td>
+                    <td>
+                    {{-- REMAINING MARKS --}}
                     @if(!empty($row['remaining_merit_marks']))
-                        <span class="badge badge-gen">
-                            Marks: {{ $row['remaining_merit_marks']}}
-                        </span>
+                        @php
+                            $marks = explode(',', $row['remaining_merit_marks']);
+                            $markChunks = array_chunk($marks, 10);
+                        @endphp
+
+                        @foreach($markChunks as $index => $group)
+                            <div class="d-flex align-items-start mb-1">
+                                @if($index == 0)
+                                    <span class="badge badge-gen me-1">Marks</span>
+                                @else
+                                    <span style="width:52px;"></span>
+                                @endif
+
+                               <span class="flex-grow-1 text-start mark-values" style="word-break:break-all;">
+
+                                    {{ implode(',', $group) }}
+                                </span>
+                            </div>
+                        @endforeach
                     @endif
 
+                    {{-- REMAINING RANKS --}}
                     @if(!empty($row['ranks']))
-                     <br/>
-                        <span class="badge badge-tech">
-                            Ranks: {{ $row['ranks']}}
-                        </span>
+                        @php
+                            $ranks = explode(',', $row['ranks']);
+                            $rankChunks = array_chunk($ranks, 10);
+                        @endphp
+
+                        @foreach($rankChunks as $index => $group)
+                            <div class="d-flex align-items-start mb-1">
+                                @if($index == 0)
+                                    <span class="badge badge-tech me-1">Ranks</span>
+                                @else
+                                    <span style="width:52px;"></span>
+                                @endif
+
+                               <span class="flex-grow-1 text-start mark-values" style="word-break:break-all;">
+
+                                    {{ implode(',', $group) }}
+                                </span>
+                            </div>
+                        @endforeach
                     @endif
                 </td>
+
                 <td>
+                    {{-- RECOMMENDED MARKS --}}
                     @if(!empty($row['recommendation_marks']))
-                        <span class="badge badge-gen">
-                            Marks: {{ $row['recommendation_marks'] }}
-                        </span>
-                        
+                        @php
+                            $marks = explode(',', $row['recommendation_marks']);
+                            $markChunks = array_chunk($marks, 20);
+                        @endphp
+
+                        @foreach($markChunks as $index => $group)
+                            <div class="d-flex align-items-start mb-1">
+                                @if($index == 0)
+                                    <span class="badge badge-gen me-1">Marks</span>
+                                @else
+                                    <span style="width:52px;"></span>
+                                @endif
+
+                                <span class="flex-grow-1 text-start mark-values" style="word-break:break-all;">
+
+                                    {{ implode(',', $group) }}
+                                </span>
+                            </div>
+                        @endforeach
                     @endif
 
+                    {{-- RECOMMENDED RANKS --}}
                     @if(!empty($row['recommended_ranks']))
-                     <br/>
-                        <span class="badge badge-tech">
-                            Ranks: {{ $row['recommended_ranks'] }}
-                        </span>
+                        @php
+                            $ranks = explode(',', $row['recommended_ranks']);
+                            $rankChunks = array_chunk($ranks, 20);
+                        @endphp
+
+                        @foreach($rankChunks as $index => $group)
+                            <div class="d-flex align-items-start mb-1">
+                                @if($index == 0)
+                                    <span class="badge badge-tech me-1">Ranks</span>
+                                @else
+                                    <span style="width:52px;"></span>
+                                @endif
+
+                                <span class="flex-grow-1 text-start mark-values" style="word-break:break-all;">
+
+                                    {{ implode(',', $group) }}
+                                </span>
+                            </div>
+                        @endforeach
                     @endif
                 </td>
 
@@ -237,7 +307,7 @@ tbody tr:hover{
                         class="badge badge-gen border-0 ms-1"
                         style="cursor:pointer"
                         onclick="openRecommendedModal('{{ $row['district'] }}')">
-                        View Recommended
+                        View
                     </button>
 
                 </td>   

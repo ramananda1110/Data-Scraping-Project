@@ -1,5 +1,18 @@
-<table class="table table-striped table-bordered">
-    <thead class="table-dark">
+<style>
+
+.modal-small-table table{
+    font-size:12px;
+}
+
+.modal-small-table th,
+.modal-small-table td{
+    padding:4px 6px;
+}
+</style>
+
+<div class="modal-body modal-small-table">
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
         <tr>
             <th>#</th>
             <th>Marks</th>
