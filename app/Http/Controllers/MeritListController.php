@@ -402,7 +402,7 @@ class MeritListController extends Controller
             ->where('m.marks', '!=', '')
             ->groupBy('m.institute_district')
             ->orderBy(DB::raw('MIN(CAST(m.marks AS DECIMAL(5,2)))'), 'asc')
-            ->paginate(20); // 🔑 required for Blade pagination
+            ->paginate(20);
          return response()->json($listOfData);
         
     }
@@ -471,5 +471,26 @@ class MeritListController extends Controller
     }
 
 
+
+
+    public function recommendedByDistrict(Request $request)
+    {
+        $requisitions = DB::table('merit_lists_bangla as m')
+            ->select(
+                'm.id',
+                'm.marks',
+                'm.recommend_institute',
+                'm.institute_district',
+                'm.institute_thana'
+            )
+            ->where('m.recommend_institute','!=','N/A')
+            ->whereNotNull('m.institute_district')
+            ->where('m.institute_district','!=','')
+            ->where('m.institute_district', $request->district)
+            ->orderBy('m.marks','DESC')
+            ->get();
+
+        return view('requisitions.recommended_table', compact('requisitions'));
+    }
 
 }

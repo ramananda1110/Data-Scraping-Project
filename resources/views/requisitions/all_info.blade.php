@@ -146,17 +146,18 @@ tbody tr:hover{
 
 
     <div class="table-responsive">
-    <table class="table table-bordered text-center align-middle">
+    <table class="table table-bordered text-left align-middle">
         <thead class="table-primary">
             <tr>
                 <th>Division</th>
                 <th>District</th>
-                <th>General</th>
-                <th>Madrasha</th>
-                <th>Technical</th>
-                <th>Sub Total</th>
+                <th>Vacant Info</th>
                 <th>Total</th>
+                <th>View</th>
+                <th>Details</th>
                 <th>Remaining- (Marks & Ranks)</th>
+                <th>recommended- (Marks & Ranks)</th>
+                <th>View</th>
             </tr>
         </thead>
 
@@ -171,13 +172,22 @@ tbody tr:hover{
                         {{ $division }}
                     </td>
                 @endif
-
                 <td >{{ $row['district'] }}</td>
-                <td>{{ $row['general'] }}</td>
-                <td>{{ $row['madrasa'] }}</td>
-                <td>{{ $row['technical'] }}</td>
+                <td>
+                    <span class="badge badge-gen">Gen: {{ $row['general'] }}</span>
+                    <span class="badge badge-mad">Mad: {{ $row['madrasa'] }}</span>
+                    <span class="badge badge-tech">Tech: {{ $row['technical'] }}</span>
+                          
+                </td>
                 <td class="fw-bold">{{ $row['sub_total'] }}</td>
-
+                <td>          
+                    <button 
+                        class="badge badge-tech border-0"
+                        style="cursor:pointer"
+                        onclick="openVacantModal('{{ $row['district'] }}')">
+                        View
+                    </button>
+                </td>            
                 @if($first)
                     <td rowspan="{{ $rowspan }}" class="division-cell text-start">
                         <div class="fw-bold fs-6">{{ $division }}</div>
@@ -186,13 +196,7 @@ tbody tr:hover{
                             <span class="badge badge-gen">Gen {{ $info['general'] }}</span>
                             <span class="badge badge-mad">Mad {{ $info['madrasa'] }}</span>
                             <span class="badge badge-tech">Tech {{ $info['technical'] }}</span>
-                           <button 
-                                class="badge badge-tech border-0"
-                                style="cursor:pointer"
-                                onclick="openVacantModal('{{ $row['district'] }}')">
-                                View Vacant
-                            </button>
-
+                          
                             
                         </div>
                     </td>
@@ -201,17 +205,42 @@ tbody tr:hover{
                <td>
                     @if(!empty($row['remaining_merit_marks']))
                         <span class="badge badge-gen">
-                            Marks: {{ $row['remaining_merit_marks'] }}
+                            Marks: {{ $row['remaining_merit_marks']}}
                         </span>
                     @endif
 
                     @if(!empty($row['ranks']))
-                        <span class="badge badge-tech ms-1">
-                            Ranks: {{ $row['ranks'] }}
+                     <br/>
+                        <span class="badge badge-tech">
+                            Ranks: {{ $row['ranks']}}
+                        </span>
+                    @endif
+                </td>
+                <td>
+                    @if(!empty($row['recommendation_marks']))
+                        <span class="badge badge-gen">
+                            Marks: {{ $row['recommendation_marks'] }}
+                        </span>
+                        
+                    @endif
+
+                    @if(!empty($row['recommended_ranks']))
+                     <br/>
+                        <span class="badge badge-tech">
+                            Ranks: {{ $row['recommended_ranks'] }}
                         </span>
                     @endif
                 </td>
 
+                 <td>          
+                    <button 
+                        class="badge badge-gen border-0 ms-1"
+                        style="cursor:pointer"
+                        onclick="openRecommendedModal('{{ $row['district'] }}')">
+                        View Recommended
+                    </button>
+
+                </td>   
                
             </tr>
             @php $first = false; @endphp
@@ -236,6 +265,24 @@ tbody tr:hover{
             </div>
         </div>
     </div>
+
+    <!-- Recommended Modal -->
+    <div class="modal fade" id="recommendedModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Recommended List – <span id="recommendedDistrict"></span>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="recommendedModalBody">
+                    <div class="text-center text-muted">Loading...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 
     </div>
@@ -271,4 +318,23 @@ function openVacantModal(district) {
                 '<div class="text-danger text-center">Failed to load data.</div>';
         });
 }
+
+
+    function openRecommendedModal(district) {
+
+        document.getElementById('recommendedDistrict').innerText = district;
+        document.getElementById('recommendedModalBody').innerHTML =
+            '<div class="text-center text-muted">Loading...</div>';
+
+        let modal = new bootstrap.Modal(document.getElementById('recommendedModal'));
+        modal.show();
+
+        fetch(`/recommended-by-district?district=${district}`)
+            .then(res => res.text())
+            .then(html => {
+                document.getElementById('recommendedModalBody').innerHTML = html;
+            });
+    }
+
+
 </script>

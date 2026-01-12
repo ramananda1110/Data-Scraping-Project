@@ -84,3 +84,6 @@ Route::get('/requisitions-bangla-7th', [InstitutePostController::class, 'index']
 
 
 Route::get('/vacancies-by-district', [InstitutePostController::class, 'vacanciesByDistrict']);
+
+
+Route::get('/recommended-by-district', [MeritListController::class, 'recommendedByDistrict']);

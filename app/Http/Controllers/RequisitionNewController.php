@@ -606,8 +606,8 @@ public function getAllInfoBangla()
         ->groupBy('division','district')
         ->get();
 
-    // ---------- Remaining Merit data ----------
-    $merits = DB::table('merit_lists_bangla')
+    // ---------- Remaining Merit ----------
+    $remainingMerits = DB::table('merit_lists_bangla')
         ->select(
             'district',
             DB::raw("GROUP_CONCAT(marks ORDER BY marks DESC SEPARATOR ',') as remaining_merit_marks"),
@@ -617,6 +617,23 @@ public function getAllInfoBangla()
         ->groupBy('district')
         ->get()
         ->keyBy(fn($x) => strtoupper($x->district));
+
+
+       
+    // ---------- Recommended Merit ----------
+    $recommendedMerits = DB::table('merit_lists_bangla as m')
+        ->select(
+            'm.institute_district as district',
+            DB::raw("GROUP_CONCAT(m.marks ORDER BY m.marks ASC SEPARATOR ',') as recommendation_marks"),
+            DB::raw("GROUP_CONCAT(m.id ORDER BY m.id DESC SEPARATOR ',') as recommended_ranks")
+        )
+        ->where('m.recommend_institute','!=','N/A')
+        ->whereNotNull('m.institute_district')
+        ->where('m.institute_district','!=','')
+        ->groupBy('m.institute_district')
+        ->get()
+        ->keyBy(fn($x) => strtoupper($x->district));
+
 
     $data = [];
 
@@ -630,8 +647,14 @@ public function getAllInfoBangla()
             'madrasa' => $r->madrasa_count,
             'technical' => $r->technical_count,
             'sub_total' => $r->total_count,
-            'remaining_merit_marks' => $merits[strtoupper($r->district)]->remaining_merit_marks ?? null,
-            'ranks' => $merits[strtoupper($r->district)]->ranks ?? null
+            'remaining_merit_marks' => $remainingMerits[strtoupper($r->district)]->remaining_merit_marks ?? null,
+            'ranks' => $remainingMerits[strtoupper($r->district)]->ranks ?? null,
+
+            
+
+              // Recommended Merit
+            'recommendation_marks' => $recommendedMerits[strtoupper($r->district)]->recommendation_marks ?? null,
+            'recommended_ranks' => $recommendedMerits[strtoupper($r->district)]->recommended_ranks ?? null,
         ];
     }
 
@@ -696,5 +719,8 @@ public function getAllInfoBangla()
      return view('requisitions.all_info', compact('data','country'));
 
     }
+
+
+
 
 }
