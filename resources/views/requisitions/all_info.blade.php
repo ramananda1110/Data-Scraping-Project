@@ -176,7 +176,16 @@ tbody tr:hover{
                         {{ $division }}
                     </td>
                 @endif
-                <td >{{ $row['district'] }}</td>
+                <td >
+
+                     <div class="d-flex align-items-center gap-2 fw-bold fs-6">
+                        <input type="checkbox"
+                            class="form-check-input m-0 division-checkbox"
+                            value="{{ $division }}">
+                        <span>{{ $row['district'] }}</span>
+                    </div>
+
+                </td>
                 <td>
                     <span class="badge badge-gen">Gen: {{ $row['general'] }}</span>
                     <span class="badge badge-mad">Mad: {{ $row['madrasa'] }}</span>
@@ -194,6 +203,7 @@ tbody tr:hover{
                 </td>            
                 @if($first)
                     <td rowspan="{{ $rowspan }}" class="division-cell text-start">
+                            
                         <div class="fw-bold fs-6">{{ $division }}</div>
                         <div class="division-meta">
                             Vacant: <strong>{{ $info['vacant'] }}</strong><br>
@@ -211,13 +221,15 @@ tbody tr:hover{
                     @if(!empty($row['remaining_merit_marks']))
                         @php
                             $marks = explode(',', $row['remaining_merit_marks']);
+                            $totalCount = count($marks);
+
                             $markChunks = array_chunk($marks, 10);
                         @endphp
 
                         @foreach($markChunks as $index => $group)
                             <div class="d-flex align-items-start mb-1">
                                 @if($index == 0)
-                                    <span class="badge badge-gen me-1">Marks</span>
+                                    <span class="badge badge-gen me-1">Marks: ({{ $totalCount }})</span>
                                 @else
                                     <span style="width:52px;"></span>
                                 @endif
@@ -234,13 +246,14 @@ tbody tr:hover{
                     @if(!empty($row['ranks']))
                         @php
                             $ranks = explode(',', $row['ranks']);
+                             $totalCount = count($ranks);
                             $rankChunks = array_chunk($ranks, 10);
                         @endphp
 
                         @foreach($rankChunks as $index => $group)
                             <div class="d-flex align-items-start mb-1">
                                 @if($index == 0)
-                                    <span class="badge badge-tech me-1">Ranks</span>
+                                    <span class="badge badge-tech me-1">Ranks: ({{$totalCount}})</span>
                                 @else
                                     <span style="width:52px;"></span>
                                 @endif
@@ -259,13 +272,14 @@ tbody tr:hover{
                     @if(!empty($row['recommendation_marks']))
                         @php
                             $marks = explode(',', $row['recommendation_marks']);
+                            $totalCount = count($marks);
                             $markChunks = array_chunk($marks, 20);
                         @endphp
 
                         @foreach($markChunks as $index => $group)
                             <div class="d-flex align-items-start mb-1">
                                 @if($index == 0)
-                                    <span class="badge badge-gen me-1">Marks</span>
+                                    <span class="badge badge-gen me-1">Marks: ({{$totalCount}})</span>
                                 @else
                                     <span style="width:52px;"></span>
                                 @endif
@@ -282,13 +296,14 @@ tbody tr:hover{
                     @if(!empty($row['recommended_ranks']))
                         @php
                             $ranks = explode(',', $row['recommended_ranks']);
+                            $totalCount = count($ranks);
                             $rankChunks = array_chunk($ranks, 20);
                         @endphp
 
                         @foreach($rankChunks as $index => $group)
                             <div class="d-flex align-items-start mb-1">
                                 @if($index == 0)
-                                    <span class="badge badge-tech me-1">Ranks</span>
+                                    <span class="badge badge-tech me-1">Ranks: ({{$totalCount}})</span>
                                 @else
                                     <span style="width:52px;"></span>
                                 @endif

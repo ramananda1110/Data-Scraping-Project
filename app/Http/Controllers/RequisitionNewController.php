@@ -579,6 +579,18 @@ public function getAllInfoBangla()
     END
     ";
 
+    $divisionDistrictMap = [
+    'Rangpur' => ['RANGPUR','DINAJPUR','KURIGRAM','GAIBANDHA','LALMONIRHAT','NILPHAMARI','THAKURGAON','PANCHAGARH'],
+    'Rajshahi'=> ['RAJSHAHI','BOGRA','NAOGAON','NATORE','CHAPAI NAWABGANJ','JOYPURHAT','PABNA','SIRAJGANJ'],
+    'Barisal' => ['BARISAL','BHOLA','PATUAKHALI','PIROJPUR','BARGUNA','JHALOKATHI'],
+    'Khulna'  => ['KHULNA','JESSORE','SATKHIRA','BAGERHAT','NARAIL','JHENAIDAH','MAGURA','KUSHTIA','CHUADANGA','MEHERPUR'],
+    'Mymensingh'=>['MYMENSINGH','JAMALPUR','NETROKONA','SHERPUR'],
+    'Sylhet'  => ['SYLHET','MOULVIBAZAR','HABIGANJ','SUNAMGANJ'],
+    'Chittagong'=>['CHITTAGONG','COX`S BAZAR','BANDARBAN','RANGAMATI','KHAGRACHHARI','FENI','NOAKHALI','LAKSHMIPUR','CHANDPUR','COMILLA','BRAHMANBARIA'],
+    'Dhaka'=>['DHAKA','GAZIPUR','NARAYANGANJ','NARSINGDI','MUNSHIGANJ','MANIKGANJ','TANGAIL','FARIDPUR','GOPALGANJ','MADARIPUR','RAJBARI','SHARIATPUR','KISHOREGANJ'],
+    ];
+
+
     // ---------- Vacancy data ----------
     $rows = InstitutePost::whereIn('post_name', ['Lecturer','Instructor (Non Tech)'])
         ->where('subject','Bengali')
@@ -635,28 +647,34 @@ public function getAllInfoBangla()
         ->keyBy(fn($x) => strtoupper($x->district));
 
 
-    $data = [];
+   $data = [];
 
-    foreach ($rows as $r) {
+foreach ($divisionDistrictMap as $division => $districts) {
+    foreach ($districts as $dist) {
 
-        $general = $r->total_count - $r->technical_count - $r->madrasa_count;
+        $row = $rows->first(fn($r) =>
+            strtoupper($r->district) === $dist && $r->division === $division
+        );
 
-        $data[$r->division]['rows'][] = [
-            'district' => $r->district,
-            'general' => $general,
-            'madrasa' => $r->madrasa_count,
-            'technical' => $r->technical_count,
-            'sub_total' => $r->total_count,
-            'remaining_merit_marks' => $remainingMerits[strtoupper($r->district)]->remaining_merit_marks ?? null,
-            'ranks' => $remainingMerits[strtoupper($r->district)]->ranks ?? null,
+        $total = $row->total_count ?? 0;
+        $technical = $row->technical_count ?? 0;
+        $madrasa = $row->madrasa_count ?? 0;
+        $general = $total - $technical - $madrasa;
 
-            
-
-              // Recommended Merit
-            'recommendation_marks' => $recommendedMerits[strtoupper($r->district)]->recommendation_marks ?? null,
-            'recommended_ranks' => $recommendedMerits[strtoupper($r->district)]->recommended_ranks ?? null,
+        $data[$division]['rows'][] = [
+            'district'=>$dist,
+            'general'=>$general,
+            'madrasa'=>$madrasa,
+            'technical'=>$technical,
+            'sub_total'=>$total,
+            'remaining_merit_marks'=>$remainingMerits[$dist]->remaining_merit_marks ?? null,
+            'ranks'=>$remainingMerits[$dist]->ranks ?? null,
+            'recommendation_marks'=>$recommendedMerits[$dist]->recommendation_marks ?? null,
+            'recommended_ranks'=>$recommendedMerits[$dist]->recommended_ranks ?? null,
         ];
     }
+}
+
 
     //return response()->json($data);
 
@@ -714,13 +732,10 @@ public function getAllInfoBangla()
         'general'   => $ct->total - $ct->technical - $ct->madrasa
     ];
 
-    //return response()->json($data);;
 
      return view('requisitions.all_info', compact('data','country'));
 
     }
-
-
 
 
 }
