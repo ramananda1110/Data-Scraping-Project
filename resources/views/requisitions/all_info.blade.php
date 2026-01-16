@@ -26,11 +26,15 @@ body{
     color:#1f3a8a;
     font-weight:700;
     font-size:14px;
+     /* strong vertical separation */
 }
 .division-meta{
     font-size:14px;
     margin-top:6px;
     line-height:1.4;
+}
+.division-end td{
+    border-bottom:3px solid #1f3a8a !important;
 }
 .badge-gen{ background:#dbeafe; color:#1e3a8a; }
 .badge-mad{ background:#fef3c7; color:#92400e; }
@@ -169,8 +173,9 @@ tbody tr:hover{
         @foreach($data as $division => $info)
             @php $rowspan = count($info['rows']); $first = true; @endphp
 
-            @foreach($info['rows'] as $row)
-            <tr>
+            @foreach($info['rows'] as $index => $row)
+            <tr class="{{ $index == $rowspan-1 ? 'division-end' : '' }}">
+
                 @if($first)
                     <td rowspan="{{ $rowspan }}" class="division-cell">
                         {{ $division }}

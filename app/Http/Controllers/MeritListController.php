@@ -408,37 +408,33 @@ class MeritListController extends Controller
     }
 
 
-    public function naRecommendedMarksCountPivot()
+  public function notRecommendedMarksCountPivot()
     {
         $data = DB::table('merit_lists_bangla')
             ->select(
                 DB::raw('CAST(marks AS UNSIGNED) AS marks'),
-
-                // bm count
                 DB::raw('SUM(CASE WHEN institute_type = "bm" THEN 1 ELSE 0 END) AS bm_count'),
-
-                // general count
                 DB::raw('SUM(CASE WHEN institute_type = "general" THEN 1 ELSE 0 END) AS general_count')
             )
             ->where('recommend_institute', 'N/A')
-            ->whereIn('institute_type', ['bm', 'general'])
+            ->whereIn('institute_type', ['bm','general'])
             ->whereNotNull('marks')
-            ->where('marks', '!=', '')
+            ->where('marks','!=','')
             ->groupBy(DB::raw('CAST(marks AS UNSIGNED)'))
             ->orderBy(DB::raw('CAST(marks AS UNSIGNED)'), 'asc')
             ->get()
             ->map(function ($row) {
                 return [
-                    'marks' => (int) $row->marks,
-                    'total number' => (int)$row->bm_count + (int)$row->general_count,
-                    'bm_count' => (int) $row->bm_count,
-                   
-                    'general_count' => (int) $row->general_count,
+                    'marks' => (int)$row->marks,
+                    'total' => (int)$row->bm_count + (int)$row->general_count,
+                    'bm' => (int)$row->bm_count,
+                    'general' => (int)$row->general_count,
                 ];
             });
 
-        return response()->json($data);
+        return view('merit.not_recommended_pivot', compact('data'));
     }
+
 
 
 
