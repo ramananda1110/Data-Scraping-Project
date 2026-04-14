@@ -90,6 +90,10 @@ class MeritListController extends Controller
                 });
             } 
         }
+        $query->where(function ($q) {
+            $q->where('cycle', '7th')
+            ->where('recommend_institute', '!=', 'N/A');
+        });
 
         // paginate instead of get()
         $listOfData = $query->orderBy('id', 'asc')->paginate(20);
@@ -116,7 +120,7 @@ class MeritListController extends Controller
 
         foreach ($rolls as $roll) {
             // Call the API for each roll
-            $response = Http::asForm()->post('http://103.230.104.210:8088/ntrca/c7/app/getres.php', [
+            $response = Http::asForm()->post('http://103.230.104.210:8088/ntrca/c8/app/getres.php', [
                 'batch' => 18,
                 'roll'  => $roll,
             ]);
@@ -138,10 +142,14 @@ class MeritListController extends Controller
 
                 DB::table('merit_lists_bangla')
                     ->where('roll', $roll)
-                    ->update(['recommend_institute' => $instituteName]);
+                    ->update([
+                        'recommend_institute' => $instituteName,
+                        'cycle' => '7th'
+                    ]);
 
                 $updated++;
             }
+
         }
 
         return response()->json([
@@ -191,8 +199,14 @@ class MeritListController extends Controller
             } 
         }
 
+        $query->where(function ($q) {
+            $q->whereIn('cycle', ['7th','6th & 7th']);
+        })->where('recommend_institute', '!=', 'N/A');
+
          // 👇 Fetch actual results
         $results = $query->get();
+
+       
 
 
         $html = '
@@ -211,11 +225,12 @@ class MeritListController extends Controller
             <table>
                 <thead>
                     <tr>
-                        <th>Serial/Rank</th>
+                        <th>Serial</th>
+                        
                         <th>Batch</th>
                         <th>Marks</th>
                         <th>Applicant Name</th>
-                        <th>Type</th>
+                        <th>Cycle</th>
                         <th>Institute</th>	
                         <th>District</th>	
                         <th>Thana</th>	
@@ -223,18 +238,22 @@ class MeritListController extends Controller
                 </thead>
                 <tbody>';
 
+        $serial = 1;
+
         foreach ($results as $data) {
             $html .= '<tr>';
-            $html .= '<td>' . $data->id . '</td>';
+            $html .= '<td>' . $serial++ . '</td>';   // Serial Number
+           
             $html .= '<td>' . $data->batch . '</td>';
             $html .= '<td>' . $data->marks . '</td>';
             $html .= '<td>' . $data->applicant_name . '</td>';
-            $html .= '<td>' . $data->institute_type . '</td>';
+            $html .= '<td>' . $data->cycle . '</td>';
             $html .= '<td>' . $data->recommend_institute . '</td>';
             $html .= '<td>' . $data->institute_district . '</td>';
             $html .= '<td>' . $data->institute_thana . '</td>';
             $html .= '</tr>';
         }
+
 
         $html .= '</tbody></table></body></html>';
 

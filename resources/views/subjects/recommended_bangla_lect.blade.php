@@ -83,6 +83,7 @@
                 <th>Name</th>
                 <th>Marks</th>
                 <th>Institute Type</th>
+                <th>Cycle</th>
                 <th>Candidate-District</th>
                 <th>Recommend Institute</th>
                 <th>District</th>
@@ -118,6 +119,7 @@
                     <td>{!! highlightSearch($data->applicant_name, request('search')) !!}</td>
                     <td>{{$data->marks}}</td>
                     <td>{{ $data->institute_type}}</td>
+                     <td>{{ $data->cycle}}</td>
                     <td>{{ $data->district}}</td>
                      <td>{!! highlightSearch($data->recommend_institute, request('search')) !!}</td>
                     <td>{{ $data->institute_district}}</td>

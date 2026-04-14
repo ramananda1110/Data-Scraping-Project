@@ -13,6 +13,7 @@ use App\Http\Controllers\InstitutePostController;
 
 use App\Http\Controllers\MeritListController;
 
+use App\Http\Controllers\ResultController;
 
 // Home route with name 'home'
 Route::get('/', function () {
@@ -87,3 +88,5 @@ Route::get('/vacancies-by-district', [InstitutePostController::class, 'vacancies
 
 
 Route::get('/recommended-by-district', [MeritListController::class, 'recommendedByDistrict']);
+
+Route::get('/fetch-hsc-results', [ResultController::class, 'fetchResults']);
